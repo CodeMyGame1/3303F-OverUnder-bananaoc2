@@ -1,15 +1,19 @@
 #include "main.h"
 
-Chassis::Chassis(std::vector<int> l_motor_ports, std::vector<int> r_motor_ports) {
+Chassis::Chassis(std::vector<int> l_motor_ports, std::vector<int> r_motor_ports, pros::motor_brake_mode_e brake_mode) {
+    brake_mode = brake_mode;
+
     // iteratively pushes motors representing left motor ports to a vector of left motors
     for (auto l_motor_port : l_motor_ports) {
         pros::Motor temp(l_motor_port);
+        temp.set_brake_mode(brake_mode);
         left_motors.push_back(temp);
     }
 
     // iteratively pushes motors representing right motor ports to a vector of right motors
     for (auto r_motor_port : r_motor_ports) {
         pros::Motor temp(r_motor_port);
+        temp.set_brake_mode(brake_mode);
         right_motors.push_back(temp);
     }
 };

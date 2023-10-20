@@ -1,6 +1,13 @@
 #include "main.h"
 
 /**
+ * TODO: make it and I OOP!!!!!
+ * TODO: add PID!
+ * TODO: add autons!
+ * TODO: add odometry!
+*/
+
+/**
  * At A Glance:
  * 
  * Motors -- total: 88W (limit):
@@ -38,7 +45,17 @@
  * - C: Intake Piston
 */
 
-Chassis chassis ({5, -10}, {-9, 7});
+// defining all our lovely classes :>
+/**
+ * TODO: make intake class as an instance under this; rename "Chassis" to "Robot" class :>
+*/
+Chassis chassis ({5, -10}, {-9, 7}, MOTOR_BRAKE_COAST);
+Intake intake (6, 'C', MOTOR_BRAKE_HOLD);
+Wings wings ('A');
+/**
+ * TODO: add catapult motor port
+*/
+Catapult catapult (0, 20, MOTOR_BRAKE_HOLD);
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -47,6 +64,10 @@ Chassis chassis ({5, -10}, {-9, 7});
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
+	/**
+	 * TODO: pros::delay for legacy ports configuring?
+	*/
+
 	pros::lcd::initialize();
 }
 
@@ -97,13 +118,23 @@ void autonomous() {}
 void opcontrol() {
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
 
+	// i honestly have no idea why i'm even doing this...
 	chassis.set_controller(pros::E_CONTROLLER_MASTER);
+	intake.set_controller(pros::E_CONTROLLER_MASTER);
+	wings.set_controller(pros::E_CONTROLLER_MASTER);
+	catapult.set_controller(pros::E_CONTROLLER_MASTER);
 
 	pros::Motor left_mtr(1);
 	pros::Motor right_mtr(2);
 
 	while (true) {
+		// currently hard-coded to run tank drive!
 		chassis.drive();
+
+		// all our lovely other functions!
+		wings.wing_it();
+		intake.intake_the_award();
+		catapult.catapult_us_to_victory();
 
 		pros::delay(10);
 	}
