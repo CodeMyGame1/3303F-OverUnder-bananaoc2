@@ -1,8 +1,13 @@
 #include "main.h"
 
 /**
- * TODO: make it and I OOP!!!!!
+ * TODO: do i have to include `#pragma once` in the header files?
+*/
+
+/**
+ * TODO: make it and I OOP (full robot, w/ intake, catapult, wings etc instantiated in main "Robot" class)!!!!!
  * TODO: add PID!
+ * TODO: how to TURN with PID?
  * TODO: add autons!
  * TODO: add odometry!
 */
@@ -49,13 +54,15 @@
 /**
  * TODO: make intake class as an instance under this; rename "Chassis" to "Robot" class :>
 */
-Chassis chassis ({5, -10}, {-9, 7}, MOTOR_BRAKE_COAST);
+Chassis chassis({5, -10}, {-9, 7}, MOTOR_BRAKE_COAST);
 Intake intake (6, 'C', MOTOR_BRAKE_HOLD);
 Wings wings ('A');
 /**
  * TODO: add catapult motor port
 */
 Catapult catapult (0, 20, MOTOR_BRAKE_HOLD);
+
+Robot(catapult, chassis, intake, wings);
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.

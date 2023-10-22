@@ -42,7 +42,9 @@
 //#include "okapi/api.hpp"
 //#include "pros/api_legacy.h"
 // #include <string>
+#include "robot.hpp"
 #include "chassis.hpp"
+#include "PID.hpp"
 #include "intake.hpp"
 #include "wings.hpp"
 #include "catapult.hpp"

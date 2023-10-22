@@ -1,4 +1,6 @@
-#include <main.h>
+#pragma once
+
+#include "main.h"
 
 class Wings {
     public:
