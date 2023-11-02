@@ -5,15 +5,17 @@
 */
 
 /**
- * TODO: make it and I OOP (full robot, w/ intake, catapult, wings etc instantiated in main "Robot" class)!!!!!
- * TODO: add PID!
- * TODO: how to TURN with PID?
- * TODO: add autons!
- * TODO: add odometry!
+ * TODO: see if you can do PID/odometry/autons without LemLib!
 */
 
 /**
  * At A Glance:
+ * 
+ * FINAL CHECKLIST:
+ * - ENSURE the robot is STATIONARY when you're starting the program; it needs to calibrate!
+ * 
+ * OTHER NOTES:
+ * - currently not using `include/PID.hpp`; `include/robot.hpp`; `src/PID.cpp`; and `src/robot.cpp`
  * 
  * Motors -- total: 88W (limit):
  * - 4 MAIN drivetrain motors (L: {-1, -4}; P: {3, 2})
@@ -50,19 +52,100 @@
  * - C: Intake Piston
 */
 
-// defining all our lovely classes :>
 /**
  * TODO: make intake class as an instance under this; rename "Chassis" to "Robot" class :>
+ * TODO: set ports!
 */
 Chassis chassis({5, -10}, {-9, 7}, MOTOR_BRAKE_COAST);
 Intake intake (6, 'C', MOTOR_BRAKE_HOLD);
 Wings wings ('A');
 /**
- * TODO: add catapult motor port
+ * TODO: add catapult motor's port
 */
 Catapult catapult (0, 20, MOTOR_BRAKE_HOLD);
 
-Robot(catapult, chassis, intake, wings);
+Robot robot (&catapult, &chassis, &intake, &wings, pros::E_CONTROLLER_MASTER);
+
+/**
+ * DRIVETRAIN: INDIVIDUAL PORTS
+ * TODO: set ports; left motors SHOULD be reversed!
+*/
+// L
+pros::Motor left_drive_front_motor(-1);
+pros::Motor left_drive_middle_motor(-2);
+pros::Motor left_drive_back_motor(-3);
+
+// R
+pros::Motor right_drive_front_motor(4);
+pros::Motor right_drive_middle_motor(5);
+pros::Motor right_drive_back_motor(6);
+
+
+/**
+ * DRIVETRAIN: MOTOR GROUPS
+*/
+pros::Motor_Group left_drive({
+	left_drive_front_motor, left_drive_middle_motor, left_drive_back_motor
+});
+pros::Motor_Group right_drive({
+	right_drive_front_motor, right_drive_middle_motor, right_drive_back_motor
+});
+
+/**
+ * SENSORS
+ * TODO: set ports!
+*/
+pros::Imu inertial_sensor(7);
+
+/**
+ * LEMLIB
+*/
+
+lemlib::Drivetrain_t drivetrain {
+	// ADDRESS POINTING TO left drivetrain motor group
+	&left_drive,
+	// ADDRESS POINTING TO right drivetrain motors
+	&right_drive,
+	// robot width (NOT INCLUDING EXTENDED WINGS!)
+	15.0625, // should be able to approximate this to 15", but we :sparkles: love :sparkles: being exact
+	// wheel diameter
+	3.25,
+	// wheel rpm
+	// (NOTE: gear ratio = output : input = 60 : 36 ~ 1.667 => 360 rpm)
+	360
+};
+
+lemlib::OdomSensors_t sensors {
+	nullptr, // vertical (forward) tracking wheel 1
+	nullptr, // vertical (forward) tracking wheel 2
+	nullptr, // horizontal (sideways) tracking wheel 1
+	nullptr, // horizontal (sideways) tracking wheel 2
+	&inertial_sensor // inertial motion unit
+};
+
+// forward/backward PID
+lemlib::ChassisController_t lateralController {
+    8, // kP
+    30, // kD
+    1, // smallErrorRange
+    100, // smallErrorTimeout
+    3, // largeErrorRange
+    500, // largeErrorTimeout
+    5 // slew rate
+};
+ 
+// turning PID
+lemlib::ChassisController_t angularController {
+    4, // kP
+    40, // kD
+    1, // smallErrorRange
+    100, // smallErrorTimeout
+    3, // largeErrorRange
+    500, // largeErrorTimeout
+    0 // slew rate
+};
+
+lemlib::Chassis auton_chassis(drivetrain, lateralController, angularController, sensors);
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -74,6 +157,9 @@ void initialize() {
 	/**
 	 * TODO: pros::delay for legacy ports configuring?
 	*/
+
+	// WILL TAKE 3 SECONDS TO CALIBRATE; ENSURE ROBOT IS STATIONARY!
+	auton_chassis.calibrate();
 
 	pros::lcd::initialize();
 }
@@ -125,11 +211,11 @@ void autonomous() {}
 void opcontrol() {
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
 
-	// i honestly have no idea why i'm even doing this...
-	chassis.set_controller(pros::E_CONTROLLER_MASTER);
-	intake.set_controller(pros::E_CONTROLLER_MASTER);
-	wings.set_controller(pros::E_CONTROLLER_MASTER);
-	catapult.set_controller(pros::E_CONTROLLER_MASTER);
+	// // i honestly have no idea why i'm even doing this...
+	// chassis.set_controller(pros::E_CONTROLLER_MASTER);
+	// intake.set_controller(pros::E_CONTROLLER_MASTER);
+	// wings.set_controller(pros::E_CONTROLLER_MASTER);
+	// catapult.set_controller(pros::E_CONTROLLER_MASTER);
 
 	pros::Motor left_mtr(1);
 	pros::Motor right_mtr(2);

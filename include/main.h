@@ -41,6 +41,7 @@
  */
 //#include "okapi/api.hpp"
 //#include "pros/api_legacy.h"
+#include "lemlib/api.hpp"
 // #include <string>
 #include "robot.hpp"
 #include "chassis.hpp"

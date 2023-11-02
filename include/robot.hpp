@@ -4,10 +4,12 @@
 
 class Robot {
     public:
-        Catapult catapult;
-        Chassis chassis;
-        Intake intake;
-        Wings wings;
+        Catapult* catapult;
+        Chassis* chassis;
+        Intake* intake;
+        Wings* wings;
+
+        pros::controller_digital_e_t* controller;
         
-        Robot(Catapult& catapult, Chassis& chassis, Intake& intake, Wings& wings);
+        Robot(Catapult* catapult, Chassis* chassis, Intake* intake, Wings* wings, pros::controller_digital_e_t controller);
 };
