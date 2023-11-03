@@ -1,6 +1,8 @@
 #include "main.h"
 
-Chassis::Chassis(std::vector<int> l_motor_ports, std::vector<int> r_motor_ports, pros::motor_brake_mode_e brake_mode) {
+Chassis::Chassis(std::vector<int> l_motor_ports, std::vector<int> r_motor_ports, pros::motor_brake_mode_e brake_mode, Robot& parent_robot) {
+    robot = &parent_robot;
+
     brake_mode = brake_mode;
 
     // iteratively pushes motors representing left motor ports to a vector of left motors
@@ -18,17 +20,13 @@ Chassis::Chassis(std::vector<int> l_motor_ports, std::vector<int> r_motor_ports,
     }
 };
 
-void Chassis::set_controller(pros::controller_id_e_t controller) {
-    master = new pros::Controller(controller);
-};
-
 void Chassis::drive() {
     pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
                     (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
                     (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);
 
-    int left = master->get_analog(ANALOG_LEFT_Y);
-    int right = master->get_analog(ANALOG_RIGHT_Y);
+    int left = robot->controller.get_analog(ANALOG_LEFT_Y);
+    int right = robot->controller.get_analog(ANALOG_RIGHT_Y);
 
     for (auto left_motor : left_motors) {
         left_motor.move(left * (12000 / 127.0));

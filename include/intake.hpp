@@ -10,19 +10,16 @@ class Intake {
         */
         pros::Motor* intake_motor;
         pros::ADIDigitalOut* intake_piston;
-        pros::Controller* master;
 
         pros::motor_brake_mode_e brake_mode;
+
+        // the parent "robot" class
+        Robot* robot;
 
         bool intake_piston_enabled = false;
         bool intake_reset = false;
 
-        Intake(int intake_port, char intake_piston_port, pros::motor_brake_mode_e brake_mode);
-
-        /**
-         * TODO: change "set_controller" to simply run as part of the constructor
-        */
-        void set_controller(pros::controller_id_e_t controller);
+        Intake(int intake_port, char intake_piston_port, pros::motor_brake_mode_e brake_mode, Robot& parent_robot);
 
         void intake_the_award();
 };

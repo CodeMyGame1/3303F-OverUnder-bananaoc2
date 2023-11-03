@@ -8,18 +8,10 @@ class Chassis {
         std::vector<pros::Motor> right_motors;
         pros::motor_brake_mode_e brake_mode;
 
-        /**
-         * TODO: why does this have to be a pointer?
-         * TODO: delete pointers on cleanup
-        */
-        pros::Controller* master;
+        // the parent "robot" class
+        Robot* robot;
 
-        Chassis(std::vector<int> l_motors, std::vector<int> r_motors, pros::motor_brake_mode_e brake_mode);
-
-        /**
-         * TODO: change "set_controller" to simply run as part of the constructor
-        */
-        void set_controller(pros::controller_id_e_t controller);
+        Chassis(std::vector<int> l_motors, std::vector<int> r_motors, pros::motor_brake_mode_e brake_mode, Robot& parent_robot);
 
         void drive();
 };
