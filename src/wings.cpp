@@ -1,7 +1,8 @@
 #include "main.h"
+#include "robot.hpp"
 
-Wings::Wings(char wing_piston_port, Robot& parent_robot) {
-    robot = &parent_robot;
+Wings::Wings(char wing_piston_port, pros::Controller& controller) {
+    controller = controller;
 
     wing_piston = new pros::ADIDigitalOut(wing_piston_port);
 }
@@ -18,7 +19,7 @@ void Wings::wing_it() {
     /**
      * TODO: sometimes, the first time i press it, it doesn't detect
     */
-    if (robot->controller.get_digital_new_press(DIGITAL_L2)) {
+    if (controller->get_digital_new_press(DIGITAL_L2)) {
         wings_enabled = !wings_enabled;
 
         wing_piston->set_value(wings_enabled);

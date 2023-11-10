@@ -1,7 +1,8 @@
 #include "main.h"
+#include "robot.hpp"
 
-Catapult::Catapult(int pros_motor_port, int rot_sensor_port, pros::motor_brake_mode_e brake_mode, Robot& parent_robot) {
-    robot = &parent_robot;
+Catapult::Catapult(int pros_motor_port, int rot_sensor_port, pros::motor_brake_mode_e brake_mode, pros::Controller& controller) {
+    controller = controller;
 
     catapult_motor = new pros::Motor(pros_motor_port);
     rotSensor = new pros::Rotation(rot_sensor_port);
@@ -22,7 +23,7 @@ void Catapult::catapult_us_to_victory() {
         catapult_motor->move(127);
     } else { catapult_motor->brake(); }
 
-    if (robot->controller.get_digital_new_press(DIGITAL_A)) {
+    if (controller->get_digital_new_press(DIGITAL_A)) {
         cata_state = !cata_state;
     }
 }

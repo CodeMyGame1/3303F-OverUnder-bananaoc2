@@ -1,4 +1,5 @@
 #include "main.h"
+#include "robot.hpp"
 
 /**
  * TODO: do i have to include `#pragma once` in the header files?
@@ -57,7 +58,7 @@
 */
 Robot robot (
 	/** catapult parameters **/
-	0, // port for the catapult motor
+	8, // port for the catapult motor
 	20, // port for the rotation sensor
 	MOTOR_BRAKE_HOLD, // brake mode for the catapult
 
@@ -67,6 +68,9 @@ Robot robot (
 	MOTOR_BRAKE_COAST, // brake mode for the chassis
 
 	/** intake parameters **/
+	/**
+	 * TODO: verify direction! 
+	*/
 	6, // port for the intake motor
 	'C', // port for the intake piston
 	MOTOR_BRAKE_HOLD, // brake mode for the intake
@@ -89,14 +93,14 @@ Robot robot (
  * TODO: set ports; left motors SHOULD be reversed!
 */
 // L
-pros::Motor left_drive_front_motor(-1);
-pros::Motor left_drive_middle_motor(-2);
-pros::Motor left_drive_back_motor(-3);
+pros::Motor left_drive_front_motor(-3);
+pros::Motor left_drive_middle_motor(-7);
+pros::Motor left_drive_back_motor(-11);
 
 // R
-pros::Motor right_drive_front_motor(4);
-pros::Motor right_drive_middle_motor(5);
-pros::Motor right_drive_back_motor(6);
+pros::Motor right_drive_front_motor(10);
+pros::Motor right_drive_middle_motor(9);
+pros::Motor right_drive_back_motor(20);
 
 
 /**

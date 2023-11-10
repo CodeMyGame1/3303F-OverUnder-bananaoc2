@@ -1,18 +1,19 @@
 #pragma once
 
 #include "main.h"
+#include "robot.hpp"
 
 class Wings {
     public:
         pros::ADIDigitalOut* wing_piston;
 
-        // the parent "robot" class
-        Robot* robot;
+        // a reference to the controller of the robot
+        pros::Controller* controller;
 
         bool wings_enabled = true;
         bool wings_reset = false;
 
-        Wings(char wing_piston_port, Robot& parent_robot);
+        Wings(char wing_piston_port, pros::Controller& controller);
 
         // :>
         void wing_it();

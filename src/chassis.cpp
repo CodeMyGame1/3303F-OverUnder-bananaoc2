@@ -1,7 +1,8 @@
 #include "main.h"
+#include "robot.hpp"
 
-Chassis::Chassis(std::vector<int> l_motor_ports, std::vector<int> r_motor_ports, pros::motor_brake_mode_e brake_mode, Robot& parent_robot) {
-    robot = &parent_robot;
+Chassis::Chassis(std::vector<int> l_motor_ports, std::vector<int> r_motor_ports, pros::motor_brake_mode_e brake_mode, pros::Controller& controller) {
+    controller = controller;
 
     brake_mode = brake_mode;
 
@@ -25,8 +26,8 @@ void Chassis::drive() {
                     (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
                     (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);
 
-    int left = robot->controller.get_analog(ANALOG_LEFT_Y);
-    int right = robot->controller.get_analog(ANALOG_RIGHT_Y);
+    int left = controller->get_analog(ANALOG_LEFT_Y);
+    int right = controller->get_analog(ANALOG_RIGHT_Y);
 
     for (auto left_motor : left_motors) {
         left_motor.move(left * (12000 / 127.0));

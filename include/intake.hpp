@@ -1,6 +1,7 @@
 #pragma once
 
 #include "main.h"
+#include "robot.hpp"
 
 class Intake {
     public:
@@ -13,13 +14,13 @@ class Intake {
 
         pros::motor_brake_mode_e brake_mode;
 
-        // the parent "robot" class
-        Robot* robot;
+        // a reference to the controller of the robot
+        pros::Controller* controller;
 
         bool intake_piston_enabled = false;
         bool intake_reset = false;
 
-        Intake(int intake_port, char intake_piston_port, pros::motor_brake_mode_e brake_mode, Robot& parent_robot);
+        Intake(int intake_port, char intake_piston_port, pros::motor_brake_mode_e brake_mode, pros::Controller& controller);
 
         void intake_the_award();
 };

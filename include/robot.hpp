@@ -1,6 +1,10 @@
 #pragma once
 
 #include "main.h"
+#include "catapult.hpp"
+#include "chassis.hpp"
+#include "intake.hpp"
+#include "wings.hpp"
 
 class Robot {
     public:

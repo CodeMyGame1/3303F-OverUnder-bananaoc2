@@ -17,11 +17,10 @@ Robot::Robot(
     pros::controller_id_e_t controller_name
 
 // "constructing" the sub-classes into class variables
-) : catapult(pros_motor_port, rot_sensor_port, brake_mode_catapult, *this),
-    chassis(l_motors, r_motors, brake_mode_chassis, *this),
-    intake(intake_port, intake_piston_port, brake_mode_intake, *this),
-    wings(wing_piston_port, *this),
-
-    controller(controller_name) 
+) : controller(controller_name),
+    catapult(pros_motor_port, rot_sensor_port, brake_mode_catapult, controller),
+    chassis(l_motors, r_motors, brake_mode_chassis, controller),
+    intake(intake_port, intake_piston_port, brake_mode_intake, controller),
+    wings(wing_piston_port, controller)
 
 {};

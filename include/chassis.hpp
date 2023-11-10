@@ -1,6 +1,7 @@
 #pragma once
 
 #include "main.h"
+#include "robot.hpp"
 
 class Chassis {
     public:
@@ -8,10 +9,10 @@ class Chassis {
         std::vector<pros::Motor> right_motors;
         pros::motor_brake_mode_e brake_mode;
 
-        // the parent "robot" class
-        Robot* robot;
+        // a reference to the controller of the robot
+        pros::Controller* controller;
 
-        Chassis(std::vector<int> l_motors, std::vector<int> r_motors, pros::motor_brake_mode_e brake_mode, Robot& parent_robot);
+        Chassis(std::vector<int> l_motors, std::vector<int> r_motors, pros::motor_brake_mode_e brake_mode, pros::Controller& controller);
 
         void drive();
 };
