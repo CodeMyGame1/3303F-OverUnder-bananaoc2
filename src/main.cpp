@@ -1,5 +1,5 @@
 #include "main.h"
-#include "robot.hpp"
+// #include "robot.hpp"
 
 /**
  * TODO: do i have to include `#pragma once` in the header files?
@@ -53,34 +53,7 @@
  * - C: Intake Piston
 */
 
-/**
- * TODO: set ports!
-*/
-Robot robot (
-	/** catapult parameters **/
-	8, // port for the catapult motor
-	20, // port for the rotation sensor
-	MOTOR_BRAKE_HOLD, // brake mode for the catapult
-
-	/** chassis parameters **/
-	{5, -10}, // ports for the left motors of the chassis
-	{-9, 7}, // ports for the right motors of the chassis
-	MOTOR_BRAKE_COAST, // brake mode for the chassis
-
-	/** intake parameters **/
-	/**
-	 * TODO: verify direction! 
-	*/
-	6, // port for the intake motor
-	'C', // port for the intake piston
-	MOTOR_BRAKE_HOLD, // brake mode for the intake
-
-	/** wings' parameters **/
-	'A', // port for the wing pistons
-
-	/** controller **/
-	pros::E_CONTROLLER_MASTER
-);
+pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 // Robot robot (
 // 	0, 
@@ -233,12 +206,12 @@ void autonomous() {}
 void opcontrol() {
 	while (true) {
 		// currently hard-coded to run tank drive!
-		robot.chassis.drive();
+		drive();
 
 		// all our lovely other functions!
-		robot.wings.wing_it();
-		robot.intake.intake_the_award();
-		robot.catapult.catapult_us_to_victory();
+		wing_it();
+		intake_the_award();
+		catapult_us_to_victory();
 
 		pros::delay(10);
 	}

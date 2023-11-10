@@ -1,16 +1,18 @@
 #include "main.h"
-#include "robot.hpp"
+// #include "robot.hpp"
 
-Wings::Wings(char wing_piston_port, pros::Controller& controller) {
-    controller = controller;
+/**
+ * TODO: verify that port!
+*/
+pros::ADIDigitalOut wing_piston('A');
 
-    wing_piston = new pros::ADIDigitalOut(wing_piston_port);
-}
+bool wings_enabled = true;
+bool wings_reset = false;
 
-void Wings::wing_it() {
+void wing_it() {
     // start of program
     if (!wings_reset) {
-        wing_piston->set_value(0);
+        wing_piston.set_value(0);
 
         wings_reset = true;
     }
@@ -19,25 +21,9 @@ void Wings::wing_it() {
     /**
      * TODO: sometimes, the first time i press it, it doesn't detect
     */
-    if (controller->get_digital_new_press(DIGITAL_L2)) {
+    if (controller.get_digital_new_press(DIGITAL_L2)) {
         wings_enabled = !wings_enabled;
 
-        wing_piston->set_value(wings_enabled);
+        wing_piston.set_value(wings_enabled);
     }
 }
-
-// void wings() {
-//     // closes wings when the robot starts up
-//     if (!wings_reset) {
-//       wing.set_value(0);
-
-//       wings_reset = true;
-//     }
-
-//     // toggles wing states
-//     if (master.get_digital_new_press(DIGITAL_L2)) {
-//       wings_enabled = !wings_enabled;
-
-//       wing.set_value(wings_enabled);
-//     }
-// }

@@ -1,33 +1,25 @@
+// Brake Mode: MOTOR_BRAKE_COAST
+
 #include "main.h"
-#include "robot.hpp"
+// #include "robot.hpp"
 
-Chassis::Chassis(std::vector<int> l_motor_ports, std::vector<int> r_motor_ports, pros::motor_brake_mode_e brake_mode, pros::Controller& controller) {
-    controller = controller;
-
-    brake_mode = brake_mode;
-
-    // iteratively pushes motors representing left motor ports to a vector of left motors
-    for (auto l_motor_port : l_motor_ports) {
-        pros::Motor temp(l_motor_port);
-        temp.set_brake_mode(brake_mode);
-        left_motors.push_back(temp);
-    }
-
-    // iteratively pushes motors representing right motor ports to a vector of right motors
-    for (auto r_motor_port : r_motor_ports) {
-        pros::Motor temp(r_motor_port);
-        temp.set_brake_mode(brake_mode);
-        right_motors.push_back(temp);
-    }
+std::vector<pros::Motor> left_motors = {
+    pros::Motor(5),
+    pros::Motor(-10)
 };
 
-void Chassis::drive() {
+std::vector<pros::Motor> right_motors = {
+    pros::Motor(-9),
+    pros::Motor(7)
+};
+
+void drive() {
     pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
                     (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
                     (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);
 
-    int left = controller->get_analog(ANALOG_LEFT_Y);
-    int right = controller->get_analog(ANALOG_RIGHT_Y);
+    int left = controller.get_analog(ANALOG_LEFT_Y);
+    int right = controller.get_analog(ANALOG_RIGHT_Y);
 
     for (auto left_motor : left_motors) {
         left_motor.move(left * (12000 / 127.0));
@@ -38,4 +30,4 @@ void Chassis::drive() {
     }
 
     pros::delay(10);
-};
+}
