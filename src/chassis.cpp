@@ -5,12 +5,14 @@
 
 std::vector<pros::Motor> left_motors = {
     pros::Motor(5),
-    pros::Motor(-10)
+    pros::Motor(-4),
+    pros::Motor(3)
 };
 
 std::vector<pros::Motor> right_motors = {
+    pros::Motor(8),
     pros::Motor(-9),
-    pros::Motor(7)
+    pros::Motor(10)
 };
 
 void drive() {

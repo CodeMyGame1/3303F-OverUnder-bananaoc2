@@ -1,7 +1,7 @@
 #include "main.h"
 // #include "robot.hpp"
 
-pros::Motor catapult_motor (8);
+pros::Motor catapult_motor (20);
 pros::Rotation rotSensor (20);
 
 bool cata_reset = false;

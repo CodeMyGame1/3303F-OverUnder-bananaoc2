@@ -1,7 +1,7 @@
 #include "main.h"
 // #include "robot.hpp"
 
-pros::Motor intake_motor(6);
+pros::Motor intake_motor(1);
 /**
  * TODO: verify intake piston port
 */
