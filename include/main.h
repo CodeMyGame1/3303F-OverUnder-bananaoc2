@@ -45,11 +45,12 @@
 // #include <string>
 // #include "robot.hpp"
 #include "util.hpp"
+#include "blocker.hpp"
+#include "catapult.hpp"
 #include "chassis.hpp"
 // #include "PID.hpp"
 #include "intake.hpp"
 #include "wings.hpp"
-#include "catapult.hpp"
 
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do

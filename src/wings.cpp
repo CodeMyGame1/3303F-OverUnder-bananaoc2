@@ -1,18 +1,17 @@
 #include "main.h"
 // #include "robot.hpp"
 
-/**
- * TODO: verify that port!
-*/
-pros::ADIDigitalOut wing_piston('A');
+pros::ADIDigitalOut left_wing('B');
+pros::ADIDigitalOut right_wing('C');
 
-bool wings_enabled = true;
+bool wings_enabled = false;
 bool wings_reset = false;
 
 void wing_it() {
     // start of program
     if (!wings_reset) {
-        wing_piston.set_value(0);
+        left_wing.set_value(0);
+        right_wing.set_value(0);
 
         wings_reset = true;
     }
@@ -24,6 +23,7 @@ void wing_it() {
     if (controller.get_digital_new_press(DIGITAL_L2)) {
         wings_enabled = !wings_enabled;
 
-        wing_piston.set_value(wings_enabled);
+        left_wing.set_value(wings_enabled);
+        right_wing.set_value(wings_enabled);
     }
 }

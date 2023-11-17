@@ -66,13 +66,13 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
  * TODO: set ports; left motors SHOULD be reversed!
 */
 // L
-pros::Motor left_drive_front_motor(5);
+pros::Motor left_drive_front_motor(-5);
 pros::Motor left_drive_middle_motor(-4);
-pros::Motor left_drive_back_motor(3);
+pros::Motor left_drive_back_motor(-3);
 
 // R
 pros::Motor right_drive_front_motor(8);
-pros::Motor right_drive_middle_motor(-9);
+pros::Motor right_drive_middle_motor(9);
 pros::Motor right_drive_back_motor(10);
 
 
@@ -209,9 +209,10 @@ void opcontrol() {
 		drive();
 
 		// all our lovely other functions!
-		// wing_it();
+		wing_it();
+		block_da_opponents();
+		catapult_us_to_victory();
 		intake_the_award();
-		// catapult_us_to_victory();
 
 		pros::delay(10);
 	}
