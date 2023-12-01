@@ -1,8 +1,9 @@
+#include <string>
 #include "main.h"
 // #include "robot.hpp"
 
 pros::Motor catapult_motor (20);
-pros::Rotation rotSensor (20);
+pros::Rotation rotSensor (12);
 
 bool cata_reset = false;
 bool cata_state = false;
@@ -16,7 +17,14 @@ void catapult_us_to_victory() {
         cata_reset = true;
     }
 
-    if (abs(rotSensor.get_angle()/100-305) > 5 || cata_state) {
+    // ~ 360 - ~308.5
+
+    // if (abs(rotSensor.get_angle()/100-305) > 5 || cata_state) {
+    
+    // pros::lcd::print(0, "Rotation Sensor Value: ");
+    // console.log(std::to_string(rotSensor.get_angle()));
+    
+    if ((((rotSensor.get_angle() / 100) < 360) && ((rotSensor.get_angle() / 100) > 300)) || cata_state) {
         catapult_motor.move(127);
     } else { catapult_motor.brake(); }
 
