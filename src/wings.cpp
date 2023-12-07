@@ -1,6 +1,8 @@
 #include "main.h"
 // #include "robot.hpp"
 
+// haha so "left" and "right" are relative to the front of the robot being the intake :clown:
+
 pros::ADIDigitalOut left_wing('B');
 pros::ADIDigitalOut right_wing('C');
 

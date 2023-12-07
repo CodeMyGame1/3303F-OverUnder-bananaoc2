@@ -23,8 +23,10 @@ void catapult_us_to_victory() {
     
     // pros::lcd::print(0, "Rotation Sensor Value: ");
     // console.log(std::to_string(rotSensor.get_angle()));
+
+    pros::lcd::print(0, "Rotation Sensor Value: %s", std::to_string(rotSensor.get_angle()));
     
-    if ((((rotSensor.get_angle() / 100) < 360) && ((rotSensor.get_angle() / 100) > 300)) || cata_state) {
+    if ((((rotSensor.get_angle() / 100) < 355) && ((rotSensor.get_angle() / 100) > 305)) || cata_state) {
         catapult_motor.move(127);
     } else { catapult_motor.brake(); }
 
