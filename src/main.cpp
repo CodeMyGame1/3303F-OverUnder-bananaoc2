@@ -142,6 +142,19 @@ lemlib::ChassisController_t angularController {
 
 lemlib::Chassis auton_chassis(drivetrain, lateralController, angularController, sensors);
 
+Intake intake = Intake( 
+	1, // intake port
+	pros::E_MOTOR_BRAKE_HOLD
+);
+
+Blocker blocker = Blocker(
+	'A'
+);
+
+bool L2_pressed = false;
+bool R1_pressed = false;
+bool R2_pressed = false;
+
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -205,14 +218,45 @@ void autonomous() {}
  */
 void opcontrol() {
 	while (true) {
+		/**
+		 * checking lovely jubbly controller inputs!
+		 */
+
+		// blocker
+		if (controller.get_digital_new_press(DIGITAL_L1)) {
+			blocker.block_da_opponents();
+		} 
+
+		// intake
+		if (controller.get_digital(DIGITAL_R1)) {
+			if (R1_pressed) {
+				// stops intake motor
+				intake.break_the_award();
+			} else {
+				intake.intake_the_award();
+			}
+
+			R1_pressed = !R1_pressed;
+		}
+
+		// outtake
+		if (controller.get_digital(DIGITAL_R2)) {
+			if (R2_pressed) {
+				// stops intake motor
+				intake.break_the_award();
+			} else {
+				intake.outtake_the_award();
+			}
+		}
+
 		// currently hard-coded to run tank drive!
 		drive();
 
 		// all our lovely other functions!
-		wing_it();
-		block_da_opponents();
-		catapult_us_to_victory();
-		intake_the_award();
+		// wing_it();
+		// block_da_opponents();
+		// catapult_us_to_victory();
+		// intake_the_award();
 
 		pros::delay(10);
 	}

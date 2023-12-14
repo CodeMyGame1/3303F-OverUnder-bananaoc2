@@ -1,31 +1,25 @@
 #include "main.h"
-// #include "robot.hpp"
+#include <string>
 
 pros::Motor intake_motor(1);
-/**
- * TODO: verify intake piston port
-*/
-pros::ADIDigitalOut intake_piston('C');
 
-bool intake_piston_enabled = false;
-bool intake_reset = false;
+Intake::Intake(int intake_port, pros::motor_brake_mode_e brake_mode) : intake_motor(intake_port) {
+    brake_mode = brake_mode;
+    
+    intake_motor.set_brake_mode(brake_mode);
+};
 
-void intake_the_award() {
-    // at the beginning of the program, `intake_reset` will be false; this field will run
-    if (!intake_reset) {
-        // set the intake motors' brake mode
-        intake_motor.set_brake_mode(MOTOR_BRAKE_HOLD);
+// runs WHEN controller.get_digital(DIGITAL_R1)
+void Intake::intake_the_award() {
+    intake_motor.move(-127);
+}
 
-        intake_piston.set_value(1);
+// runs WHEN controller.get_digital(DIGITAL_R2)
+void Intake::outtake_the_award() {
+    intake_motor.move(127);
+}
 
-        intake_reset = true;
-    }
-
-    // intake
-    if (controller.get_digital(DIGITAL_R1)) {
-        intake_motor.move(-127);
-    // outtake
-    } else if (controller.get_digital(DIGITAL_R2)) {
-        intake_motor.move(127);
-    } else { intake_motor.brake(); }
+// runs WHEN controller.get_digital(DIGITAL_R1) / controller.get_digital(DIGITAL_R2) DEPRESSED
+void Intake::break_the_award() {
+    intake_motor.brake();
 }
