@@ -53,37 +53,44 @@
  * - C: Intake Piston
 */
 
+// from `util.cpp`~
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
-
-// Robot robot (
-// 	0, 
-// 	20, 
-// 	MOTOR_BRAKE_HOLD
-// );
 
 /**
  * DRIVETRAIN: INDIVIDUAL PORTS
  * TODO: set ports; left motors SHOULD be reversed!
 */
 // L
-pros::Motor left_drive_front_motor(-5);
-pros::Motor left_drive_middle_motor(-4);
-pros::Motor left_drive_back_motor(-3);
+pros::Motor lf_motor(-5);
+pros::Motor lm_motor(-4);
+pros::Motor lb_motor(-3);
 
 // R
-pros::Motor right_drive_front_motor(8);
-pros::Motor right_drive_middle_motor(9);
-pros::Motor right_drive_back_motor(10);
+pros::Motor rf_motor(8);
+pros::Motor rm_motor(9);
+pros::Motor rb_motor(10);
+
+// std::vector<pros::Motor> left_motors = {
+//     pros::Motor(-5),
+//     pros::Motor(-4),
+//     pros::Motor(-3)
+// };
+
+// std::vector<pros::Motor> right_motors = {
+//     pros::Motor(8),
+//     pros::Motor(9),
+//     pros::Motor(10)
+// };
 
 
 /**
  * DRIVETRAIN: MOTOR GROUPS
 */
 pros::Motor_Group left_drive({
-	left_drive_front_motor, left_drive_middle_motor, left_drive_back_motor
+	lf_motor, lm_motor, lb_motor
 });
 pros::Motor_Group right_drive({
-	right_drive_front_motor, right_drive_middle_motor, right_drive_back_motor
+	rf_motor, rm_motor, rb_motor
 });
 
 /**
@@ -142,13 +149,20 @@ lemlib::ChassisController_t angularController {
 
 lemlib::Chassis auton_chassis(drivetrain, lateralController, angularController, sensors);
 
+Blocker blocker = Blocker(
+	'A'
+);
+Chassis chassis = Chassis(
+	{lf_motor, lm_motor, lb_motor},
+	{rf_motor, rm_motor, rb_motor}
+);
 Intake intake = Intake( 
 	1, // intake port
 	pros::E_MOTOR_BRAKE_HOLD
 );
-
-Blocker blocker = Blocker(
-	'A'
+Wings wings = Wings(
+	'B',
+	'C'
 );
 
 bool L2_pressed = false;
@@ -227,6 +241,11 @@ void opcontrol() {
 			blocker.block_da_opponents();
 		} 
 
+		// wings
+		if (controller.get_digital_new_press(DIGITAL_L2)) {
+			wings.wing_it();
+		}
+
 		// intake
 		if (controller.get_digital(DIGITAL_R1)) {
 			if (R1_pressed) {
@@ -250,13 +269,10 @@ void opcontrol() {
 		}
 
 		// currently hard-coded to run tank drive!
-		drive();
+		chassis.tank_drive(controller.get_analog(ANALOG_LEFT_Y), controller.get_analog(ANALOG_RIGHT_Y));
 
 		// all our lovely other functions!
-		// wing_it();
-		// block_da_opponents();
 		// catapult_us_to_victory();
-		// intake_the_award();
 
 		pros::delay(10);
 	}
