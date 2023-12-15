@@ -12,6 +12,10 @@
 /**
  * At A Glance:
  * 
+ * some notes:
+ * - while filling the robot with air, at around ~70-80 PSI, the blocker WILL come down, so take caution ^-^
+ * - the blocker requires one press before it like actually starts functioning so take that into account
+ * 
  * FINAL CHECKLIST:
  * - ENSURE the robot is STATIONARY when you're starting the program; it needs to calibrate!
  * 
@@ -152,6 +156,11 @@ lemlib::Chassis auton_chassis(drivetrain, lateralController, angularController, 
 Blocker blocker = Blocker(
 	'A'
 );
+Catapult catapult = Catapult(
+	20,
+	12,
+	MOTOR_BRAKE_HOLD
+);
 Chassis chassis = Chassis(
 	{lf_motor, lm_motor, lb_motor},
 	{rf_motor, rm_motor, rb_motor}
@@ -166,7 +175,6 @@ Wings wings = Wings(
 );
 
 bool L2_pressed = false;
-bool R1_pressed = false;
 bool R2_pressed = false;
 
 /**
@@ -236,6 +244,18 @@ void opcontrol() {
 		 * checking lovely jubbly controller inputs!
 		 */
 
+		// print stuff to LCD ig...?
+		
+		// end print stuff to LCD
+
+		bool R1_pressed = controller.get_digital(DIGITAL_R1);
+		bool R2_pressed = controller.get_digital(DIGITAL_R2);
+
+		// catapult
+		if (controller.get_digital_new_press(DIGITAL_A)) {
+			catapult.toggle_catapult();
+		}
+
 		// blocker
 		if (controller.get_digital_new_press(DIGITAL_L1)) {
 			blocker.block_da_opponents();
@@ -246,27 +266,21 @@ void opcontrol() {
 			wings.wing_it();
 		}
 
+		// if the intake and outtake buttons are either BOTH pressed or BOTH depressed...
+		if (R1_pressed == R2_pressed) {
+			// don't do anything!
+			intake.break_the_award();
+		}
 		// intake
-		if (controller.get_digital(DIGITAL_R1)) {
-			if (R1_pressed) {
-				// stops intake motor
-				intake.break_the_award();
-			} else {
-				intake.intake_the_award();
-			}
-
-			R1_pressed = !R1_pressed;
+		else if (R1_pressed) {
+			intake.intake_the_award();
 		}
-
 		// outtake
-		if (controller.get_digital(DIGITAL_R2)) {
-			if (R2_pressed) {
-				// stops intake motor
-				intake.break_the_award();
-			} else {
-				intake.outtake_the_award();
-			}
+		else if (R2_pressed) {
+			intake.outtake_the_award();
 		}
+
+		catapult.catapult_us_to_victory();
 
 		// currently hard-coded to run tank drive!
 		chassis.tank_drive(controller.get_analog(ANALOG_LEFT_Y), controller.get_analog(ANALOG_RIGHT_Y));
