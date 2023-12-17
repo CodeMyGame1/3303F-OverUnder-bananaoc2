@@ -1,9 +1,7 @@
 /**
- * TODO: see if you can do PID/odometry/autons without LemLib!
-*/
-
-/**
- * TODO: fix "at a glance"
+ * MAIN TODO: 
+ * - address all other TODOs
+ * - see if you can do PID/odometry/autons without LemLib!
 */
 
 
@@ -12,46 +10,91 @@
 // #include "robot.hpp"
 
 /**
+ * TODO: At A Glance housekeeping
+ * - add gear ratio for catapult
+*/
+/**
  * AT A GLANCE:
  * 
- * some notes:
- * - while filling the robot with air, at around ~70-80 PSI, the blocker WILL come down, so take caution ^-^
+ * NOTE: just as general advice, most of the code / documentation here
+ * is organized in alphabetical order :P
+ * 
+ *  
+ * OPNOTES:
+ * - GAME:
+ *   - ENSURE the robot is STATIONARY when you're starting the program; it needs to calibrate!
  * - the blocker requires one press before it like actually starts functioning so take that into account
+ *
+ * - PREP CHECKLIST:
+ *   - AIR: fill the robot with air!
+ *     - while filling the robot with air, at around ~70-80 PSI, the blocker WILL come down, so take caution ^-^
+ *   - BATTERY: make sure the battery is full!
  * 
- * FINAL CHECKLIST:
- * - ENSURE the robot is STATIONARY when you're starting the program; it needs to calibrate!
  * 
- * OTHER NOTES:
- * - currently not using `include/PID.hpp`; `include/robot.hpp`; `src/PID.cpp`; and `src/robot.cpp`
+ * ROBOT SPECS:
+ * - the front of the robot is the INTAKE
  * 
- * Motors -- total: 88W (limit):
- * - 4 MAIN drivetrain motors (L: {-1, -4}; P: {3, 2})
- *   - blue (600rpm)
- *   - 36:1 gear ratio
- *   - (11W * 4 motors = 44W)
- * - 2 pairs of big and small cata motors (DRIVETRAIN: L: {5, -10}; R: {-9, 7}; TBD CATA)
- *   - big motors
- *     - <one of the colors of the rainbow> (200rpm)
- *     - 8:1 gear ratio
- *     - (11W * 2 motors = 22W)
- *   - small motors
- *     - <one of the colors of  the rainbow> (200rpm)
- *     - 8:1 gear ratio
- *     - (5.5W * 2 motors = 11W)
- * - 1 intake motor (P: 6)
- *   - green (200rpm)
- *   - 1:3 gear ratio 
- *   - (11W * 1 motor = 11W)
  * 
- * Sensors:
- * - Rotational Sensor (P: 20)
- * - Inertial Motion Sensor (P: 11)
+ * BLOCKER:
+ * - PORT: 'A' as in Apple
+ * - SPECS:
+ *   - watch out it go nyoom nyoom (for legal reasons this is a joke)
+ * 
+ * 
+ * CATAPULT:
+ * - PORTS:
+ *   - MOTOR: 20
+ *   - ROTATION SENSOR: 12
+ * - SPECS:
+ *   - CARTRIDGE: 100rpm (red)
+ *   - GEAR RATIO: <gear ratio here>
+ *   - BRAKE MODE: HOLD
+ * 
+ * 
+ * DRIVETRAIN: (11W * 6 motors = 66W) 
+ * - PORTS:
+ *   - LEFT:
+ *     - front: -5
+ *     - middle: -4
+ *     - back: -3
+ *   - RIGHT: 
+ *     - front: 8
+ *     - middle: 9
+ *     - back: 10
+ * - SPECS:
+ *   - CARTRIDGE: 600rpm (blue)
+ *   - GEAR RATIO: 36 : 1
+ *   - BRAKE MODE: COAST
+ * 
+ * 
+ * IMU:
+ * - PORT: 17
+ * 
+ * 
+ * INTAKE:
+ * - PORT: 1
+ * - SPECS:
+ *   - CARTRIDGE: 200rpm (green)
+ *   - GEAR RATIO: <gear ratio here>
+ *   - BRAKE MODE: HOLD
+ * 
+ * 
+ * WINGS:
+ * - PORTS:
+ *   - LEFT: 'B'
+ *   - RIGHT: 'C'
+ * - SPECS:
+ *   - watch out it go boom boom (for legal reasons this is a joke)
+ * 
  * 
  * Cwontrils:
  * - DRIVING: (tank drive) left and right joysticks (y-axis only)
- * - WINGS: L2
- * - INTAKE: R1 intake, R2 outtake
- * - PTO: X
+ * - BLOCKER: (toggle; switches between open/close) L1
+ * - CATAPULT: (toggle; runs continuously) A
+ * - WINGS: (toggle; switches between open/close) L2
+ * - INTAKE: (hold to run continuously) 
+ *   - INTAKE: R1
+ *   - OUTTAKE: R2
  
  * analog:
  * - A: Wing Pistons (both of them!)
@@ -207,11 +250,12 @@ Blocker blocker = Blocker(
 Catapult catapult = Catapult(
 	20,
 	12,
-	MOTOR_BRAKE_HOLD
+	pros::E_MOTOR_BRAKE_HOLD
 );
 Chassis chassis = Chassis(
 	{lf_motor, lm_motor, lb_motor},
-	{rf_motor, rm_motor, rb_motor}
+	{rf_motor, rm_motor, rb_motor},
+	pros::E_MOTOR_BRAKE_COAST
 );
 Intake intake = Intake( 
 	1, // intake port
