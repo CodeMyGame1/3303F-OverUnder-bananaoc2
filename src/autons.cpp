@@ -12,6 +12,10 @@
  * - https://vr.vex.com/
  * - https://www.vexrobotics.com/over-under-manual
  * - https://kb.vex.com/hc/en-us/articles/15549324090772-Understanding-the-VRC-Over-Under-Field-Layout
+ * - https://github.com/EZ-Robotics/EZ-Template/blob/v2.2.0/src/autons.cpp
+ * 
+ * MODELING AUTON OFF OF:
+ * - https://www.youtube.com/watch?v=bTMBQ_n-3PQ
 */
 
 /**
@@ -27,9 +31,22 @@ void default_constants() {
     ez_chassis.set_pid_constants(&ez_chassis.swingPID, 7, 0, 45, 0);
 }
 
+// remember, INTAKE is in front!
+/**
+ * AUTON DESC:
+ * - starts wherever the top-left robot in this starts: https://www.youtube.com/watch?v=bTMBQ_n-3PQ
+*/
 void main_auton(Intake intake) {
-    intake.intake_the_award();
+    /**
+     * MOVE: getting triball under elevation bar
+    */
     
+    // remember, this runs continuously!
+    intake.intake_the_award();
+    // default slew_min = 80 (will start at speed 80) and
+    // default slew_distance 7 (will go from 80 -> our speed over 7"!)
+    ez_chassis.set_drive_pid(-12, 80, true); 
+    ez_chassis.wait_drive();
 }
 
 // model auton:

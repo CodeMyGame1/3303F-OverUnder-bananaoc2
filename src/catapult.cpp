@@ -15,7 +15,7 @@ Catapult::Catapult(int cata_port, int rot_port, pros::motor_brake_mode_e brake_m
 void Catapult::toggle_catapult() {
     // toggles the catapult... ikr who would've thought
 
-    cata_state = !cata_state
+    cata_state = !cata_state;
 }
 
 void Catapult::catapult_us_to_victory() {
