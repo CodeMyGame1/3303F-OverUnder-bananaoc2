@@ -41,16 +41,21 @@
  */
 //#include "okapi/api.hpp"
 //#include "pros/api_legacy.h"
-#include "lemlib/api.hpp"
+// #include "lemlib/api.hpp"
+#include "EZ-Template/api.hpp"
 // #include <string>
+#include "autons.hpp"
 // #include "robot.hpp"
-#include "util.hpp"
 #include "blocker.hpp"
 #include "catapult.hpp"
 #include "chassis.hpp"
-// #include "PID.hpp"
 #include "intake.hpp"
-#include "wings.hpp"
+// #include "PID.hpp"
+#include "util.hpp"
+#include "wings.hpp"// #include "robot.hpp"
+
+extern Drive ez_chassis;
+
 
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do

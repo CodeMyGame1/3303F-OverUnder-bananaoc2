@@ -4,6 +4,28 @@
         "project_name": "3303F OC",
         "target": "v5",
         "templates": {
+            "EZ-Template": {
+                "location": "/home/pranesh/.config/pros/templates/EZ-Template@2.2.0",
+                "metadata": {
+                    "origin": "local"
+                },
+                "name": "EZ-Template",
+                "py/object": "pros.conductor.templates.local_template.LocalTemplate",
+                "supported_kernels": "^3.8.0",
+                "system_files": [
+                    "include\\EZ-Template\\sdcard.hpp",
+                    "include\\EZ-Template\\auton.hpp",
+                    "include\\EZ-Template\\PID.hpp",
+                    "include\\EZ-Template\\drive\\drive.hpp",
+                    "include\\EZ-Template\\auton_selector.hpp",
+                    "include\\EZ-Template\\util.hpp",
+                    "firmware\\EZ-Template.a",
+                    "include\\EZ-Template\\api.hpp"
+                ],
+                "target": "v5",
+                "user_files": [],
+                "version": "2.2.0"
+            },
             "LemLib": {
                 "location": "C:\\Users\\robol\\AppData\\Roaming\\PROS\\templates\\LemLib@0.4.7",
                 "metadata": {

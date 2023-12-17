@@ -1,5 +1,39 @@
 #include "main.h"
 
+/**
+ * SOME COOL INFO:
+ * 
+ * - field: 12ft x 12ft
+ *   - each tile: ~24in x 24in (23.622 x 23.622 in <- 600mm x 600mm)
+ * 
+ * 
+ * USEFUL LINKS:
+ * - https://ez-robotics.github.io/EZ-Template/docs/auton_functions/
+ * - https://vr.vex.com/
+ * - https://www.vexrobotics.com/over-under-manual
+ * - https://kb.vex.com/hc/en-us/articles/15549324090772-Understanding-the-VRC-Over-Under-Field-Layout
+*/
+
+/**
+ * TODO: tune!
+*/
+void default_constants() {
+    ez_chassis.set_slew_min_power(80, 80);
+    ez_chassis.set_slew_distance(7, 7);
+    ez_chassis.set_pid_constants(&ez_chassis.headingPID, 11, 0, 20, 0);
+    ez_chassis.set_pid_constants(&ez_chassis.forward_drivePID, 0.45, 0, 5, 0);
+    ez_chassis.set_pid_constants(&ez_chassis.backward_drivePID, 0.45, 0, 5, 0);
+    ez_chassis.set_pid_constants(&ez_chassis.turnPID, 5, 0.003, 35, 15);
+    ez_chassis.set_pid_constants(&ez_chassis.swingPID, 7, 0, 45, 0);
+}
+
+void main_auton(Intake intake) {
+    intake.intake_the_award();
+    
+}
+
+// model auton:
+
 // void main_auton(pros::Motor_Group left_motors, pros::Motor_Group right_motors) {
 //     intake.move(-127);
 //     chassis.moveTo(-4, 60, 500);
