@@ -5,4 +5,4 @@
 void default_constants();
 
 // EZ-Template
-void main_auton(Intake intake);
+void main_auton(Catapult catapult, Intake intake, Wings wings);

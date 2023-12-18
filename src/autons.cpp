@@ -34,19 +34,168 @@ void default_constants() {
 // remember, INTAKE is in front!
 /**
  * AUTON DESC:
- * - starts wherever the top-left robot in this starts: https://www.youtube.com/watch?v=bTMBQ_n-3PQ
+ * - starts wherever the top-left robot in this starts: https://www.youtube.com/watch?v=bTMBQ_n-3PQ; the WHOLE square, not straddling two squares
+ * 
+ * RISKS:
+ * - could cross over the middle barrier
+ * - tends towards being a risky auton by itself lel
+ * 
+ * REQUIREMENTS:
+ * - matchload triball!!!
+ * 
+ * for all `set_drive_pid()` calls, keep in mind:
+ * - default slew_min = 80 (will start at speed 80) and
+ * - default slew_distance 7 (will go from 80 -> our speed over 7"!)
+ * 
+ * TODO: 
+ * - TUNE!
+ *   - tune speeds
+ *   - tune distances / angles
+ *   - figure out what needs slew and what doesn't
+ * - IMPLEMENT INTAKE AND SHTUFF
+ *   - figure out how we're going to get the triball out of the matchload zone
+ * - is the wait for intake (pros::delay) too long?
+ * - take into account field variances / uncertainties!
 */
-void main_auton(Intake intake) {
+void main_auton(Catapult catapult, Intake intake, Wings wings) {
     /**
      * MOVE: getting triball under elevation bar
     */
     
-    // remember, this runs continuously!
+    // starts intake running CONTINUOUSLY! IMPORTANT!
     intake.intake_the_award();
-    // default slew_min = 80 (will start at speed 80) and
-    // default slew_distance 7 (will go from 80 -> our speed over 7"!)
-    ez_chassis.set_drive_pid(-12, 80, true); 
+    // moves robot directly under elevation bar
+    ez_chassis.set_drive_pid(12, 80);
     ez_chassis.wait_drive();
+    // leeway in case the triball is not picked up by intake yet
+    pros::delay(250);
+    // stops le intake
+    intake.break_the_award();
+
+    /**
+     * MOVE: get triball out of matchload bar
+    */
+    // moves robot so its tip is touching the matchload bar
+    // should ideally be holding first intaked triball + pushing alliance (matchload) triball in front
+    ez_chassis.set_drive_pid(42, 80, true);
+    ez_chassis.wait_drive();
+
+    /**
+     * TODO: does this turn LEFT or RIGHT...?
+    */
+    ez_chassis.set_turn_pid(30, -80);
+    ez_chassis.wait_drive();
+
+    // opens wings
+    wings.wing_it();
+    // leeway for wings to open (let's hope there's enough air in the reservoir [air tank]!)
+    pros::delay(250);
+
+    // moves fully up the matchload bar, hopefully (?) getting the matchload zone triball OUTTA THERE
+    ez_chassis.set_drive_pid(-30, 80, true);
+    ez_chassis.wait_drive();
+
+    // turns a LITTLE towards the goal
+    ez_chassis.set_turn_pid(30, -80);
+    ez_chassis.wait_drive();
+
+
+    /**
+     * MOVE: scoring 3 triballs!!!
+    */
+
+    // furiously (?) scores into the goal
+    ez_chassis.set_drive_pid(-12, 127);
+    ez_chassis.wait_drive();
+
+    // backs out of the goal a little 
+    ez_chassis.set_drive_pid(10, 108);
+    ez_chassis.wait_drive();
+
+    // turns around (intake now facing goal!)
+    ez_chassis.set_turn_pid(180, 127);
+    ez_chassis.wait_drive();
+
+    // scores into the goal again
+    ez_chassis.set_drive_pid(10, 108);
+    ez_chassis.wait_drive();
+    // starts outtake running
+    intake.outtake_the_award();
+    // leeway for intake to outtake (quite the oxymoron, isn't it?)
+    pros::delay(250);
+    // stops le intake
+    intake.break_the_award();
+
+    
+    /**
+     * MOVE: scoring TWO MORE TRIBALLS????
+    */
+
+    // backs out of the goal again
+    ez_chassis.set_drive_pid(-10, 108);
+    ez_chassis.wait_drive();
+
+    // turns towards the FOURTH triball yeah babyy we're on a roll!! >:))
+    ez_chassis.set_turn_pid(75, 108);
+    ez_chassis.wait_drive();
+
+    // starts intake running
+    intake.intake_the_award();
+    // goes TOWARDS le fourth triball :>
+    ez_chassis.set_drive_pid(50, 108, true);
+    ez_chassis.wait_drive();
+    // leeway for intake to intake
+    pros::delay(250);
+    // stops le intake
+    intake.break_the_award();
+
+    // turns around to face the goal DIAGONALLY
+    ez_chassis.set_turn_pid(140, 108);
+    ez_chassis.wait_drive();
+
+    // starts outtake running
+    intake.outtake_the_award();
+    // leeway for outtake to outtake
+    pros::delay(250);
+    // stops le outtake
+    intake.outtake_the_award();
+
+    // goes towards the goal a bit (but not enough to like accidentally intake the outtaked triball :grimacing:)
+    ez_chassis.set_drive_pid(16, 108, true);
+    ez_chassis.wait_drive();
+
+    // turns around towards the FIFTH TRIBALL???
+    ez_chassis.set_turn_pid(100, -108);
+    ez_chassis.wait_drive();
+
+    // starts intake
+    intake.intake_the_award();
+    // drives towards FIFTH TRIBALL!!!
+    ez_chassis.set_drive_pid(16, 108, true);
+    ez_chassis.wait_drive();
+    // leeway for intake to intake
+    pros::delay(250);
+    // stop le intake
+    intake.break_the_award();
+
+    // turns around towards goal
+    ez_chassis.set_turn_pid(160, 108);
+    ez_chassis.wait_drive();
+
+    // open wings
+    wings.open();
+    // nyoom into goal
+    ez_chassis.set_drive_pid(36, 108, true);
+    ez_chassis.wait_drive();
+    // start outtaking
+    intake.outtake_the_award();
+    // leeway for outtake to outtake
+    pros::delay(250);
+    // stop le outtake
+    intake.break_the_award();
+
+    // ... and that's the end of the risky, risky five-ball (possibly six if chaos unfolds) AUTON!
+// 18
 }
 
 // model auton:

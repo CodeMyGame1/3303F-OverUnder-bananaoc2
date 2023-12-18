@@ -12,6 +12,24 @@ Catapult::Catapult(int cata_port, int rot_port, pros::motor_brake_mode_e brake_m
     catapult_motor.set_brake_mode(brake_mode);
 }
 
+void Catapult::reset() {
+    while (
+        // checks if catapult is NOT at the bottom
+        (
+            ((rotSensor.get_angle() / 100) < 355) 
+            && ((rotSensor.get_angle() / 100) > 305)
+        )
+        // and, of course, if the driver wants the catapult to run...
+        // guess we can't do anythin about that ¯\_(ツ)_/¯
+        || cata_state)
+    {
+        // if catapult ain't at the bottom, let's move it there!
+        catapult_motor.move(127);
+    }
+    
+    catapult_motor.brake();
+}
+
 void Catapult::toggle_catapult() {
     // toggles the catapult... ikr who would've thought
 
