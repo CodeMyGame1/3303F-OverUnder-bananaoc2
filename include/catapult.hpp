@@ -12,6 +12,8 @@ class Catapult {
 
         Catapult(int cata_port, int rot_port, pros::motor_brake_mode_e brake_mode);
 
+        int get_formatted_angle();
+
         void reset();
 
         void toggle_catapult();

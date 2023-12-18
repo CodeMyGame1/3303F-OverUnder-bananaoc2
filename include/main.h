@@ -44,17 +44,22 @@
 // #include "lemlib/api.hpp"
 #include "EZ-Template/api.hpp"
 // #include <string>
-#include "intake.hpp"
-#include "chassis.hpp"
-#include "autons.hpp"
-// #include "robot.hpp"
 #include "blocker.hpp"
 #include "catapult.hpp"
+#include "chassis.hpp"
+#include "intake.hpp"
+#include "wings.hpp"
+// #include "robot.hpp"
 // #include "PID.hpp"
 #include "util.hpp"
-#include "wings.hpp"// #include "robot.hpp"
+#include "autons.hpp"
 
+extern Blocker blocker;
+extern Catapult catapult;
+extern Chassis chassis;
 extern Drive ez_chassis;
+extern Intake intake;
+extern Wings wings;
 
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do
