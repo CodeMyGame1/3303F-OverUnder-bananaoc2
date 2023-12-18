@@ -11,5 +11,11 @@ class Wings {
 
         Wings(std::uint8_t l_wing_port, std::uint8_t r_wing_port);
 
+        void update();
+
+        void reset();
+
+        void open();
+
         void wing_it();
 };

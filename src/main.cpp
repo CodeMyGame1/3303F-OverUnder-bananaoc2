@@ -359,7 +359,7 @@ void autonomous() {
 	ez_chassis.reset_drive_sensor(); // Reset drive sensors to 0
 	ez_chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
 	
-	main_auton(intake);
+	main_auton(catapult, intake, wings);
 	// ez::as::auton_selector.call_selected_auton();
 }
 
@@ -382,6 +382,9 @@ bool R2_pressed = false;
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+	// closes 'em if not already done
+	wings.reset();
+
 	while (true) {
 
 		/**

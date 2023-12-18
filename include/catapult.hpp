@@ -12,6 +12,8 @@ class Catapult {
 
         Catapult(int cata_port, int rot_port, pros::motor_brake_mode_e brake_mode);
 
+        void reset();
+
         void toggle_catapult();
 
         void catapult_us_to_victory();
