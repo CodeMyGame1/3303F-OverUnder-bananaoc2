@@ -58,13 +58,17 @@ void default_constants() {
  * - take into account field variances / uncertainties!
 */
 void main_auton(Catapult catapult, Intake intake, Wings wings) {
+    pros::lcd::print(0, "starting main auton");
+
     /**
      * MOVE: getting triball under elevation bar
     */
     
     // starts intake running CONTINUOUSLY! IMPORTANT!
+    pros::lcd::print(0, "running intake");
     intake.intake_the_award();
     // moves robot directly under elevation bar
+    pros::lcd::print(0, "driving forward");
     ez_chassis.set_drive_pid(12, 80);
     ez_chassis.wait_drive();
     // leeway in case the triball is not picked up by intake yet

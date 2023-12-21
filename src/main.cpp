@@ -2,6 +2,7 @@
  * MAIN TODO: 
  * - address all other TODOs
  * - see if you can do PID/odometry/autons without LemLib!
+ * - will it be "setting up"/initializing robot for 5 seconds DURING, or BEFORE autonomous period?
 */
 
 
@@ -62,7 +63,7 @@
  *     - middle: 9
  *     - back: 10
  * - SPECS:
- *   - CARTRIDGE: 600rpm (blue)
+ *   - CARTRIDGE: 600rpm (blue) -> 200rpm (green)
  *   - GEAR RATIO: 36 : 1
  *   - BRAKE MODE: COAST
  * 
@@ -200,20 +201,14 @@ Drive ez_chassis (
 	// right chassis ports
 	,{ 8, 9, 10 }
 
-	/**
-	 * TODO: find, install, and check port number of IMU!
-	*/
 	// IMU port
-	,0
+	,17
 
 	// wheel diameter
 	,3.25
 
-	/**
-	 * TODO: verify!,
-	*/
 	// cartridge rpm
-	,600
+	,200
 
 	// gear ratio
 	,(60 / 36) // ~ 1.667
