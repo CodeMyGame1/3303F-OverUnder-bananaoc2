@@ -72,6 +72,7 @@ void main_auton(Catapult catapult, Intake intake, Wings wings) {
     ez_chassis.set_drive_pid(12, 80);
     ez_chassis.wait_drive();
     // leeway in case the triball is not picked up by intake yet
+    pros::lcd::print(0, "waiting to intake");
     pros::delay(250);
     // stops le intake
     intake.break_the_award();
@@ -81,25 +82,30 @@ void main_auton(Catapult catapult, Intake intake, Wings wings) {
     */
     // moves robot so its tip is touching the matchload bar
     // should ideally be holding first intaked triball + pushing alliance (matchload) triball in front
-    ez_chassis.set_drive_pid(42, 80, true);
+    pros::lcd::print(0, "moving backward");
+    ez_chassis.set_drive_pid(-42, 80, true);
     ez_chassis.wait_drive();
 
     /**
      * TODO: does this turn LEFT or RIGHT...?
     */
+    pros::lcd::print(0, "turning \"left\"");
     ez_chassis.set_turn_pid(30, -80);
     ez_chassis.wait_drive();
 
     // opens wings
+    pros::lcd::print(0, "opening wings");
     wings.wing_it();
     // leeway for wings to open (let's hope there's enough air in the reservoir [air tank]!)
     pros::delay(250);
 
     // moves fully up the matchload bar, hopefully (?) getting the matchload zone triball OUTTA THERE
+    pros::lcd::print(0, "moving backward");
     ez_chassis.set_drive_pid(-30, 80, true);
     ez_chassis.wait_drive();
 
     // turns a LITTLE towards the goal
+    pros::lcd::print(0, "turning \"left\"");
     ez_chassis.set_turn_pid(30, -80);
     ez_chassis.wait_drive();
 
@@ -109,21 +115,26 @@ void main_auton(Catapult catapult, Intake intake, Wings wings) {
     */
 
     // furiously (?) scores into the goal
+    pros::lcd::print(0, "moving backward");
     ez_chassis.set_drive_pid(-12, 127);
     ez_chassis.wait_drive();
 
     // backs out of the goal a little 
+    pros::lcd::print(0, "moving forward");
     ez_chassis.set_drive_pid(10, 108);
     ez_chassis.wait_drive();
 
     // turns around (intake now facing goal!)
+    pros::lcd::print(0, "do a barrel roll");
     ez_chassis.set_turn_pid(180, 127);
     ez_chassis.wait_drive();
 
     // scores into the goal again
+    pros::lcd::print(0, "moving backward");
     ez_chassis.set_drive_pid(10, 108);
     ez_chassis.wait_drive();
     // starts outtake running
+    pros::lcd::print(0, "waits to outtake");
     intake.outtake_the_award();
     // leeway for intake to outtake (quite the oxymoron, isn't it?)
     pros::delay(250);
@@ -136,19 +147,23 @@ void main_auton(Catapult catapult, Intake intake, Wings wings) {
     */
 
     // backs out of the goal again
+    pros::lcd::print(0, "moving backward");
     ez_chassis.set_drive_pid(-10, 108);
     ez_chassis.wait_drive();
 
     // turns towards the FOURTH triball yeah babyy we're on a roll!! >:))
+    pros::lcd::print(0, "turning \"left\"");
     ez_chassis.set_turn_pid(75, 108);
     ez_chassis.wait_drive();
 
     // starts intake running
+    pros::lcd::print(0, "moving forward");
     intake.intake_the_award();
     // goes TOWARDS le fourth triball :>
     ez_chassis.set_drive_pid(50, 108, true);
     ez_chassis.wait_drive();
     // leeway for intake to intake
+    pros::lcd::print(0, "waiting to intake");
     pros::delay(250);
     // stops le intake
     intake.break_the_award();
