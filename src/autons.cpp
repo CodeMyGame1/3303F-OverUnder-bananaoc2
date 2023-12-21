@@ -21,14 +21,23 @@
 /**
  * TODO: tune!
 */
+// P: get where u wanna go
+// I: GO FASTER
+// D: slow down near the end
+
 void default_constants() {
     ez_chassis.set_slew_min_power(80, 80);
     ez_chassis.set_slew_distance(7, 7);
     ez_chassis.set_pid_constants(&ez_chassis.headingPID, 11, 0, 20, 0);
-    ez_chassis.set_pid_constants(&ez_chassis.forward_drivePID, 0.45, 0, 5, 0);
+    ez_chassis.set_pid_constants(&ez_chassis.forward_drivePID, .5, 5, 1, 0);
     ez_chassis.set_pid_constants(&ez_chassis.backward_drivePID, 0.45, 0, 5, 0);
     ez_chassis.set_pid_constants(&ez_chassis.turnPID, 5, 0.003, 35, 15);
     ez_chassis.set_pid_constants(&ez_chassis.swingPID, 7, 0, 45, 0);
+}
+
+void test_auton() {
+    ez_chassis.set_drive_pid(25, 127);
+    ez_chassis.wait_drive();
 }
 
 // remember, INTAKE is in front!
@@ -43,9 +52,7 @@ void default_constants() {
  * REQUIREMENTS:
  * - matchload triball!!!
  * 
- * for all `set_drive_pid()` calls, keep in mind:
- * - default slew_min = 80 (will start at speed 80) and
- * - default slew_distance 7 (will go from 80 -> our speed over 7"!)
+ * for all `set_drive_pid()` calls, keep in mind slew_min and slew_distance!
  * 
  * TODO: 
  * - TUNE!

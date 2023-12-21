@@ -205,13 +205,14 @@ Drive ez_chassis (
 	,17
 
 	// wheel diameter
-	,3.25
+	,3.375
 
 	// cartridge rpm
 	,200
 
 	// gear ratio
-	,(60 / 36) // ~ 1.667
+	// ,(60 / 36) // ~ 1.667
+	,(60/36)
 
 	// <not using tracking wheels lel>
 	// Uncomment if using tracking wheels
@@ -355,13 +356,16 @@ void autonomous() {
 	ez_chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
 	
 	default_constants();
-	main_auton(catapult, intake, wings);
-	// ez::as::auton_selector.call_selected_auton();
+	// main_auton(catapult, intake, wings);
+
+	test_auton();
 }
 
 
 bool L2_pressed = false;
 bool R2_pressed = false;
+
+bool testedAuton = false;
 /**
  * OPCONTROL: DESCRIPTION
  * 
@@ -378,6 +382,11 @@ bool R2_pressed = false;
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+	// if (!testedAuton) {
+	// 	test_auton();
+	// 	testedAuton = true;
+	// }
+
 	// closes 'em if not already done
 	wings.reset();
 
