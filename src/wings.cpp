@@ -12,7 +12,7 @@ void Wings::update() {
   right_wing.set_value(wings_enabled);
 }
 
-void Wings::reset() {
+void Wings::close() {
   wings_enabled = false;
   
   this->update();

@@ -6,5 +6,8 @@ void default_constants();
 
 void test_auton();
 
-// EZ-Template
-void main_auton(Catapult catapult, Intake intake, Wings wings);
+void drive_example();
+
+void risky_goal_side();
+
+void goal_side_two();

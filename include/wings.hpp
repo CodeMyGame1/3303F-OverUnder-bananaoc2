@@ -13,7 +13,7 @@ class Wings {
 
         void update();
 
-        void reset();
+        void close();
 
         void open();
 

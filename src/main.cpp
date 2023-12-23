@@ -1,7 +1,23 @@
 /**
- * MAIN TODO: 
- * - address all other TODOs
- * - see if you can do PID/odometry/autons without LemLib!
+ * NOTE: TODOs in the code are ranked by order of priority
+ * 
+ * "TODOPR<N>:" denotes a TODO of priority N
+ * - example: "TODOPRONE\:" (omit backslash; that's just to prevent confusion when searching for other, actual TODOs)
+ * 
+ * "TODOPRHK\:" (again, omit backslash) denotes a TODO that is purely for housekeeping / organizing the code
+ * 
+ * NOTE: just as general advice, most of the code / documentation here is organized in ALPHABETICAL order :P
+*/
+
+/**
+ * REMEMBER TO ADDRESS ALL OTHER TODOs!
+ * - TODOPRONE: add new ports!
+ * - TODOPRHK: edit ports in "AT A GLANCE"
+ * 
+ * 
+ * - TODOPRTHREE: consider making brake mode HOLD for chassis
+ * - TODOPRTHREE: multiple tunes for multiple states of the robot (different weights of items placed on it?)
+ * - see if you can do PID/odometry/autons without LemLib/EZTemplate!
  * - will it be "setting up"/initializing robot for 5 seconds DURING, or BEFORE autonomous period?
 */
 
@@ -11,29 +27,11 @@
 // #include "robot.hpp"
 
 /**
- * TODO: At A Glance housekeeping
- * - add gear ratio for catapult
+ * TODOPRHK:
+ * - add gear ratio for flywheel
 */
 /**
  * AT A GLANCE:
- * 
- * NOTE: just as general advice, most of the code / documentation here
- * is organized in alphabetical order :P
- * 
- *  
- * OPNOTES:
- * - GAME:
- *   - ENSURE the robot is STATIONARY when you're starting the program; it needs to calibrate!
- * - the blocker requires one press before it like actually starts functioning so take that into account
- *
- * - PREP CHECKLIST:
- *   - AIR: fill the robot with air!
- *     - while filling the robot with air, at around ~70-80 PSI, the blocker WILL come down, so take caution ^-^
- *   - BATTERY: make sure the battery is full!
- * 
- * 
- * ROBOT SPECS:
- * - the front of the robot is the INTAKE
  * 
  * 
  * BLOCKER:
@@ -42,7 +40,7 @@
  *   - watch out it go nyoom nyoom (for legal reasons this is a joke)
  * 
  * 
- * CATAPULT:
+ * CATAPULT: (not active in new bot)
  * - PORTS:
  *   - MOTOR: 20
  *   - ROTATION SENSOR: 12
@@ -68,6 +66,11 @@
  *   - BRAKE MODE: COAST
  * 
  * 
+ * FLYWHEEL:
+ * - PORTS: (same as intake)
+ *   - <add ports here> 
+ * - 
+ * 
  * IMU:
  * - PORT: 17
  * 
@@ -79,6 +82,19 @@
  *   - GEAR RATIO: <gear ratio here>
  *   - BRAKE MODE: HOLD
  * 
+ * OPNOTES:
+ * - GAME:
+ *   - ENSURE the robot is STATIONARY when you're starting the program; it needs to calibrate!
+ * - the blocker requires one press before it like actually starts functioning so take that into account
+ *
+ * - PREP CHECKLIST:
+ *   - AIR: fill the robot with air!
+ *     - while filling the robot with air, at around ~70-80 PSI, the blocker WILL come down, so take caution ^-^
+ *   - BATTERY: make sure the battery is full!
+ *   - LICENSE PLATES: make sure the license plates are on, and of the right color (and team number ig lmfao)!
+ * 
+ * - TO KEEP IN MIND: (during the game)
+ *   - the front of the robot is the intake!!!
  * 
  * WINGS:
  * - PORTS:
@@ -86,7 +102,6 @@
  *   - RIGHT: 'C'
  * - SPECS:
  *   - watch out it go boom boom (for legal reasons this is a joke)
- * 
  * 
  * Cwontrils:
  * - DRIVING: (tank drive) left and right joysticks (y-axis only)
@@ -108,17 +123,18 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 /**
  * DRIVETRAIN: INDIVIDUAL MOTORS
+ * TODO: set ports!
 */
 
 // L
-pros::Motor lf_motor(-5);
-pros::Motor lm_motor(-4);
-pros::Motor lb_motor(-3);
+pros::Motor lf_motor(0);
+pros::Motor lm_motor(0);
+pros::Motor lb_motor(0);
 
 // R
-pros::Motor rf_motor(8);
-pros::Motor rm_motor(9);
-pros::Motor rb_motor(10);
+pros::Motor rf_motor(0);
+pros::Motor rm_motor(0);
+pros::Motor rb_motor(0);
 
 /**
  * DRIVETRAIN: MOTOR GROUPS
@@ -126,14 +142,23 @@ pros::Motor rb_motor(10);
 pros::Motor_Group left_drive({
 	lf_motor, lm_motor, lb_motor
 });
+
 pros::Motor_Group right_drive({
 	rf_motor, rm_motor, rb_motor
 });
 
+/**
+ * INTAKE: INDIVIDUAL MOTORS
+ * TODO: set these ports!
+*/
+
+pros::Motor intake_motor_one(9);
+pros::Motor intake_motor_two(-1);
+
 // /**
 //  * TODO: set ports!
 // */
-// pros::Imu inertial_sensor(0);
+// pros::Imu inertial_sensor(17);
 
 // /**
 //  * START: LEMLIB
@@ -205,17 +230,24 @@ Drive ez_chassis (
 	,17
 
 	// wheel diameter
-	,3.375
+	/**
+	 * NOTE: THE ACTUAL DIAMETER OF THE WHEEL IS 3.25 INCHES
+	 * 
+	 * why did we set it to a different value? well, when we tune the PID, the robot still consistently undershoots the target distance 
+	 * (but at a set proportion). therefore, we have resorted to the (questionable?) move of adjusting the wheel diameter to 
+	 * compensate for this. the below value is NOT the actual diameter of the wheel
+	*/
+	,1.9
 
 	// cartridge rpm
 	,200
 
-	// gear ratio
-	// ,(60 / 36) // ~ 1.667
-	,(60/36)
+	// gear ratio ~ 1.667
+	,(60 / 36)
 
-	// <not using tracking wheels lel>
-	// Uncomment if using tracking wheels
+	/**
+	 * UNCOMMENT IF: using tracking wheels
+	*/
 	/*
 	// left tracking wheel ports
 	// ,{1, 2} // 3 wire encoder
@@ -226,7 +258,9 @@ Drive ez_chassis (
 	// ,-9 // Rotation sensor
 	*/
 
-	// Uncomment if tracking wheels are plugged into a 3 wire expander
+	/**
+	 * UNCOMMENT IF: tracking wheels are plugged into a 3 wire expander
+	*/
 	// 3 Wire Port Expander Smart Port
 	// ,1
 );
@@ -243,18 +277,18 @@ Drive ez_chassis (
 Blocker blocker = Blocker(
 	'A'
 );
-Catapult catapult = Catapult(
-	20,
-	12,
-	pros::E_MOTOR_BRAKE_HOLD
-);
+// Catapult catapult = Catapult(
+// 	20,
+// 	12,
+// 	pros::E_MOTOR_BRAKE_HOLD
+// );
 Chassis chassis = Chassis(
 	{lf_motor, lm_motor, lb_motor},
 	{rf_motor, rm_motor, rb_motor},
 	pros::E_MOTOR_BRAKE_COAST
 );
 Intake intake = Intake( 
-	1, // intake port
+	{intake_motor_one, intake_motor_two},
 	pros::E_MOTOR_BRAKE_HOLD
 );
 Wings wings = Wings(
@@ -278,13 +312,16 @@ Wings wings = Wings(
  */
 void initialize() {
 	/**
-	 * TODO: pros::delay for legacy ports configuring?
+	 * TODOPRTWO: pros::delay for legacy ports configuring?
 	*/
 
 	/**
-	 * TODO: consider autonomous selector?
+	 * TODOPRONE: verify autonomous selector works
 	*/
 	// Autonomous Selector using LLEMU
+	/**
+	 * Auton Selector for sample autons
+	*/
 	// ez::as::auton_selector.add_autons({
 	// 	Auton("Example Drive\n\nDrive forward and come back.", drive_example),
 	// 	Auton("Example Turn\n\nTurn 3 times.", turn_example),
@@ -293,6 +330,10 @@ void initialize() {
 	// 	Auton("Swing Example\n\nSwing, drive, swing.", swing_example),
 	// 	Auton("Combine all 3 movements", combining_movements),
 	// 	Auton("Interference\n\nAfter driving forward, robot performs differently if interfered or not.", interfered_example),
+	// });
+	// ez::as::auton_selector.add_autons({
+	// 	Auton("Risky Goal Side Auton", risky_goal_side),
+	// 	Auton("Goal Side Auton 2", goal_side_two)
 	// });
 	// ez::as::initialize();
 
@@ -306,10 +347,14 @@ void initialize() {
 
 	// EZ-Template
 	/**
-	 * TODO: modify active brake kP
+	 * TODOPRTHREE: modify active brake kP
 	*/
 	ez_chassis.set_active_brake(0); // Sets the active brake kP. We recommend 0.1.
 	ez_chassis.initialize();
+	/**
+	 * TODOPRTHREE: not using bc tuning PID constants seemingly has no effect; add in later?
+	*/
+	// default_constants();
 
 	pros::lcd::initialize();
 } 
@@ -355,17 +400,16 @@ void autonomous() {
 	ez_chassis.reset_drive_sensor(); // Reset drive sensors to 0
 	ez_chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
 	
-	default_constants();
-	// main_auton(catapult, intake, wings);
+	risky_goal_side();
 
-	test_auton();
+	// test_auton();
+	// drive_example();
 }
 
 
 bool L2_pressed = false;
 bool R2_pressed = false;
 
-bool testedAuton = false;
 /**
  * OPCONTROL: DESCRIPTION
  * 
@@ -382,102 +426,96 @@ bool testedAuton = false;
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	// if (!testedAuton) {
-	// 	test_auton();
-	// 	testedAuton = true;
-	// }
-
 	// closes 'em if not already done
-	wings.reset();
+	wings.close();
+	// closes blocker if not already done
 
 	while (true) {
 
-		/**
-		 * START: PRINTING TO LCD
-		*/
+	/**
+	 * START: PRINTING TO LCD
+	*/
 
-		/**
-		 * END: PRINTING TO LCD
-		*/
+	/**
+	 * END: PRINTING TO LCD
+	*/
 
 
-		/**
-		 * SECTION: CHECKING CONTROLLER INPUTS
-		 */
-		bool R1_pressed = controller.get_digital(DIGITAL_R1);
-		bool R2_pressed = controller.get_digital(DIGITAL_R2);
-
+	/**
+	 * SECTION: CHECKING CONTROLLER INPUTS
+	 */
+	bool R1_pressed = controller.get_digital(DIGITAL_R1);
+	bool R2_pressed = controller.get_digital(DIGITAL_R2);
 		
-		/**
-		 * START: HANDLING CONTROLLER INPUTS
-		*/
+	/**
+	 * START: HANDLING CONTROLLER INPUTS
+	*/
 
-		/**
-		 * CATAPULT:
-		*/
-		if (controller.get_digital_new_press(DIGITAL_A)) {
-			catapult.toggle_catapult();
-		}
-
-		/**
-		 * BLOCKER:
-		*/
-		if (controller.get_digital_new_press(DIGITAL_L1)) {
-			blocker.block_da_opponents();
-		} 
-
-		/**
-		 * WINGS:
-		*/
-		if (controller.get_digital_new_press(DIGITAL_L2)) {
-			wings.wing_it();
-		}
-
-		/**
-		 * INTAKE:
-		*/
-		// if the intake and outtake buttons are either BOTH pressed or BOTH depressed...
-		if (R1_pressed == R2_pressed) {
-			// don't do anything!
-			intake.break_the_award();
-		}
-		// intake
-		else if (R1_pressed) {
-			intake.intake_the_award();
-		}
-		// outtake
-		else if (R2_pressed) {
-			intake.outtake_the_award();
-		}
-
-		/**
-		 * END: HANDLING CONTROLLER INPUTS
-		*/
-
-
-		/**
-		 * START: RUN OTHER ROBOT FUNCTIONS
-		*/
-
-		/**
-		 * CATAPULT:
-		*/
-		catapult.catapult_us_to_victory();
-
-		/**
-		 * DRIVETRAIN:
-		*/
-		// currently hard-coded to run tank drive!
-		chassis.tank_drive(controller.get_analog(ANALOG_LEFT_Y), controller.get_analog(ANALOG_RIGHT_Y));
-
-		/**
-		 * END: RUN OTHER ROBOT FUNCTIONS
-		*/
-
-
-		/**
-		 * TICK DELAY: (muy muy important)
-		*/
-		pros::delay(10);
+	/**
+	 * CATAPULT:
+	*/
+	if (controller.get_digital_new_press(DIGITAL_A)) {
+		catapult.toggle_catapult();
 	}
+
+	/**
+	 * BLOCKER:
+	*/
+	if (controller.get_digital_new_press(DIGITAL_L1)) {
+		blocker.block_da_opponents();
+	} 
+
+	/**
+	 * WINGS:
+	*/
+	if (controller.get_digital_new_press(DIGITAL_L2)) {
+		wings.wing_it();
+	}
+
+	/**
+	 * INTAKE:
+	*/
+	// if the intake and outtake buttons are either BOTH pressed or BOTH depressed...
+	if (R1_pressed == R2_pressed) {
+		// don't do anything!
+		intake.break_the_award();
+	}
+	// intake
+	else if (R1_pressed) {
+		intake.intake_the_award();
+	}
+	// outtake (ALSO RUNS THE FLYWHEEL!!!)
+	else if (R2_pressed) {
+		intake.outtake_the_award();
+	}
+
+	/**
+	 * END: HANDLING CONTROLLER INPUTS
+	*/
+
+
+	/**
+	 * START: RUN OTHER ROBOT FUNCTIONS
+	*/
+
+	/**
+	 * CATAPULT:
+	*/
+	// catapult.catapult_us_to_victory();
+
+	/**
+	 * DRIVETRAIN:
+	*/
+	// currently hard-coded to run tank drive!
+	chassis.tank_drive(controller.get_analog(ANALOG_LEFT_Y), controller.get_analog(ANALOG_RIGHT_Y));
+
+	/**
+	 * END: RUN OTHER ROBOT FUNCTIONS
+	*/
+
+
+	/**
+	 * TICK DELAY: (muy muy important)
+	*/
+	pros::delay(10);
 }

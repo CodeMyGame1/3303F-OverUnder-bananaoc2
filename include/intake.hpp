@@ -4,11 +4,11 @@
 
 class Intake {
     public:
-        pros::Motor intake_motor;
+        pros::Motor_Group intake_motors;
 
         pros::motor_brake_mode_e brake_mode;
         
-        Intake(int intake_port, pros::motor_brake_mode_e brake_mode);
+        Intake(std::vector<pros::Motor> motor_ports, pros::motor_brake_mode_e brake_mode);
 
         void intake_the_award();
 
