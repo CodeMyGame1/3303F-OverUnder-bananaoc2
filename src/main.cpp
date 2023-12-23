@@ -10,7 +10,26 @@
 */
 
 /**
+ * looking at robot from intake side:
+ * back, top, on left: 20
+ * back, bottom, right: 2
+ * back, bottom, left: 6
+ * radio port 8
+*/
+
+/**
+ * RUSH TODO: (bublin moment)
+ * - add IMU
+ * - add ports!
+ * - wire motors + pneumatics
+ * - build side hang!
+ * - add two rubberbands on flywheel motors
+ * - maybe cut down flywheel axle bc too long?
+*/
+
+/**
  * REMEMBER TO ADDRESS ALL OTHER TODOs!
+ * - TODOPRONE: ADD IMU!!!
  * - TODOPRONE: add new ports!
  * - TODOPRHK: edit ports in "AT A GLANCE"
  * 
@@ -63,7 +82,7 @@
  * - SPECS:
  *   - CARTRIDGE: 600rpm (blue) -> 200rpm (green)
  *   - GEAR RATIO: 36 : 1
- *   - BRAKE MODE: COAST
+ *   - BRAKE MODE: COAST 
  * 
  * 
  * FLYWHEEL:
@@ -127,24 +146,24 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 */
 
 // L
-pros::Motor lf_motor(0);
-pros::Motor lm_motor(0);
-pros::Motor lb_motor(0);
+pros::Motor lf_motor(3);
+// pros::Motor lm_motor(0);
+pros::Motor lb_motor(4);
 
 // R
-pros::Motor rf_motor(0);
-pros::Motor rm_motor(0);
-pros::Motor rb_motor(0);
+pros::Motor rf_motor(5);
+// pros::Motor rm_motor(0);
+pros::Motor rb_motor(6);
 
 /**
  * DRIVETRAIN: MOTOR GROUPS
 */
 pros::Motor_Group left_drive({
-	lf_motor, lm_motor, lb_motor
+	lf_motor, /* lm_motor, */ lb_motor
 });
 
 pros::Motor_Group right_drive({
-	rf_motor, rm_motor, rb_motor
+	rf_motor, /* rm_motor, */ rb_motor
 });
 
 /**
@@ -152,13 +171,13 @@ pros::Motor_Group right_drive({
  * TODO: set these ports!
 */
 
-pros::Motor intake_motor_one(9);
+pros::Motor intake_motor_one(8);
 pros::Motor intake_motor_two(-1);
 
-// /**
-//  * TODO: set ports!
-// */
-// pros::Imu inertial_sensor(17);
+/**
+ * TODO: set ports!
+*/
+pros::Imu inertial_sensor(7);
 
 // /**
 //  * START: LEMLIB
@@ -220,14 +239,20 @@ pros::Motor intake_motor_two(-1);
 */
 
 Drive ez_chassis (
+	/**
+	 * TODOPRONE: set these ports
+	*/
 	// left chassis ports
-	{ -5, -4, -3 }
+	{ 3, 4 }
 	
 	// right chassis ports
-	,{ 8, 9, 10 }
+	,{ 5, 6 }
 
+	/**
+	 * TODOPRONE: set port
+	*/
 	// IMU port
-	,17
+	,7
 
 	// wheel diameter
 	/**
@@ -236,13 +261,21 @@ Drive ez_chassis (
 	 * why did we set it to a different value? well, when we tune the PID, the robot still consistently undershoots the target distance 
 	 * (but at a set proportion). therefore, we have resorted to the (questionable?) move of adjusting the wheel diameter to 
 	 * compensate for this. the below value is NOT the actual diameter of the wheel
+	 * 
+	 * TODOPRONE: tune wheel diameter
 	*/
 	,1.9
 
+	/**
+	 * TODOPRTHREE: verify this is correct (blue motors for dt, right?)
+	*/
 	// cartridge rpm
-	,200
+	,600
 
 	// gear ratio ~ 1.667
+	/**
+	 * TODOPRTWO: verify gear ratio is correct!
+	*/
 	,(60 / 36)
 
 	/**
@@ -274,8 +307,12 @@ Drive ez_chassis (
  * START: ROBOT COMPONENT INITIALIZATION
 */
 
+/**
+ * TODO: add blocker ports
+*/
 Blocker blocker = Blocker(
-	'A'
+	'A',
+	'B'
 );
 // Catapult catapult = Catapult(
 // 	20,
@@ -283,17 +320,20 @@ Blocker blocker = Blocker(
 // 	pros::E_MOTOR_BRAKE_HOLD
 // );
 Chassis chassis = Chassis(
-	{lf_motor, lm_motor, lb_motor},
-	{rf_motor, rm_motor, rb_motor},
+	{lf_motor, /* lm_motor, */ lb_motor},
+	{rf_motor, /* rm_motor, */ rb_motor},
 	pros::E_MOTOR_BRAKE_COAST
 );
 Intake intake = Intake( 
 	{intake_motor_one, intake_motor_two},
 	pros::E_MOTOR_BRAKE_HOLD
 );
+/**
+ * TODO: add wing ports
+*/
 Wings wings = Wings(
-	'B',
-	'C'
+	'C',
+	'D'
 );
 
 /**
@@ -431,91 +471,92 @@ void opcontrol() {
 	// closes blocker if not already done
 
 	while (true) {
+		/**
+		 * START: PRINTING TO LCD
+		*/
 
-	/**
-	 * START: PRINTING TO LCD
-	*/
-
-	/**
-	 * END: PRINTING TO LCD
-	*/
+		/**
+		 * END: PRINTING TO LCD
+		*/
 
 
-	/**
-	 * SECTION: CHECKING CONTROLLER INPUTS
-	 */
-	bool R1_pressed = controller.get_digital(DIGITAL_R1);
-	bool R2_pressed = controller.get_digital(DIGITAL_R2);
-		
-	/**
-	 * START: HANDLING CONTROLLER INPUTS
-	*/
+		/**
+		 * SECTION: CHECKING CONTROLLER INPUTS
+		 */
+		bool R1_pressed = controller.get_digital(DIGITAL_R1);
+		bool R2_pressed = controller.get_digital(DIGITAL_R2);
+			
+		/**
+		 * START: HANDLING CONTROLLER INPUTS
+		*/
 
-	/**
-	 * CATAPULT:
-	*/
-	if (controller.get_digital_new_press(DIGITAL_A)) {
-		catapult.toggle_catapult();
+		/**
+		 * CATAPULT:
+		*/
+		// if (controller.get_digital_new_press(DIGITAL_A)) {
+		// 	catapult.toggle_catapult();
+		// }
+
+		/**
+		 * BLOCKER:
+		*/
+		if (controller.get_digital_new_press(DIGITAL_L1)) {
+			blocker.block_da_opponents();
+		} 
+
+		/**
+		 * WINGS:
+		*/
+		if (controller.get_digital_new_press(DIGITAL_L2)) {
+			wings.wing_it();
+		}
+
+		/**
+		 * INTAKE:
+		*/
+		// if the intake and outtake buttons are either BOTH pressed or BOTH depressed...
+		if (R1_pressed == R2_pressed) {
+			// don't do anything!
+			intake.break_the_award();
+		}
+		// intake
+		else if (R1_pressed) {
+			intake.intake_the_award();
+		}
+		// outtake (ALSO RUNS THE FLYWHEEL!!!)
+		else if (R2_pressed) {
+			intake.outtake_the_award();
+		}
+
+		/**
+		 * END: HANDLING CONTROLLER INPUTS
+		*/
+
+
+		/**
+		 * START: RUN OTHER ROBOT FUNCTIONS
+		*/
+
+		/**
+		 * CATAPULT:
+		*/
+		// catapult.catapult_us_to_victory();
+
+		/**
+		 * DRIVETRAIN:
+		*/
+		// currently hard-coded to run tank drive!
+		// chassis.tank_drive(controller.get_analog(ANALOG_LEFT_Y), controller.get_analog(ANALOG_RIGHT_Y));
+		ez_chassis.tank();
+
+		/**
+		 * END: RUN OTHER ROBOT FUNCTIONS
+		*/
+
+
+		/**
+		 * TICK DELAY: (muy muy important)
+		*/
+		pros::delay(10);
 	}
-
-	/**
-	 * BLOCKER:
-	*/
-	if (controller.get_digital_new_press(DIGITAL_L1)) {
-		blocker.block_da_opponents();
-	} 
-
-	/**
-	 * WINGS:
-	*/
-	if (controller.get_digital_new_press(DIGITAL_L2)) {
-		wings.wing_it();
-	}
-
-	/**
-	 * INTAKE:
-	*/
-	// if the intake and outtake buttons are either BOTH pressed or BOTH depressed...
-	if (R1_pressed == R2_pressed) {
-		// don't do anything!
-		intake.break_the_award();
-	}
-	// intake
-	else if (R1_pressed) {
-		intake.intake_the_award();
-	}
-	// outtake (ALSO RUNS THE FLYWHEEL!!!)
-	else if (R2_pressed) {
-		intake.outtake_the_award();
-	}
-
-	/**
-	 * END: HANDLING CONTROLLER INPUTS
-	*/
-
-
-	/**
-	 * START: RUN OTHER ROBOT FUNCTIONS
-	*/
-
-	/**
-	 * CATAPULT:
-	*/
-	// catapult.catapult_us_to_victory();
-
-	/**
-	 * DRIVETRAIN:
-	*/
-	// currently hard-coded to run tank drive!
-	chassis.tank_drive(controller.get_analog(ANALOG_LEFT_Y), controller.get_analog(ANALOG_RIGHT_Y));
-
-	/**
-	 * END: RUN OTHER ROBOT FUNCTIONS
-	*/
-
-
-	/**
-	 * TICK DELAY: (muy muy important)
-	*/
-	pros::delay(10);
 }
