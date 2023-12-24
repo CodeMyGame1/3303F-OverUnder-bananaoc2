@@ -21,10 +21,17 @@
  * RUSH TODO: (bublin moment)
  * - add IMU
  * - add ports!
+ * - put rubber nuts on intake hardstop screw
+ * - add bigger sprocket to intake system (on the outside!)
+ * - (when looking from intake side: bottom top right) -> securely fasten second rubber band (twist & stretch over the motor case!)
  * - wire motors + pneumatics
+ * - shorten string on blocker so it doesn't interfere with other components when retracted
+ * - find better place for battery
+ * - port 8 might be loose connection
  * - build side hang!
  * - add two rubberbands on flywheel motors
  * - maybe cut down flywheel axle bc too long?
+ * - gears skipping & interfering on left side
 */
 
 /**
@@ -146,24 +153,24 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 */
 
 // L
-pros::Motor lf_motor(3);
-// pros::Motor lm_motor(0);
-pros::Motor lb_motor(4);
+pros::Motor lf_motor(-17);
+pros::Motor lbb_motor(-6);
+pros::Motor lbt_motor(18);
 
 // R
-pros::Motor rf_motor(5);
-// pros::Motor rm_motor(0);
-pros::Motor rb_motor(6);
+pros::Motor rf_motor(8);
+pros::Motor rbb_motor(2);
+pros::Motor rbt_motor(-20);
 
 /**
  * DRIVETRAIN: MOTOR GROUPS
 */
 pros::Motor_Group left_drive({
-	lf_motor, /* lm_motor, */ lb_motor
+	lf_motor, lbb_motor, lbt_motor
 });
 
 pros::Motor_Group right_drive({
-	rf_motor, /* rm_motor, */ rb_motor
+	rf_motor, rbb_motor, rbt_motor
 });
 
 /**
@@ -171,7 +178,7 @@ pros::Motor_Group right_drive({
  * TODO: set these ports!
 */
 
-pros::Motor intake_motor_one(8);
+pros::Motor intake_motor_one(9);
 pros::Motor intake_motor_two(-1);
 
 /**
@@ -243,10 +250,10 @@ Drive ez_chassis (
 	 * TODOPRONE: set these ports
 	*/
 	// left chassis ports
-	{ 3, 4 }
+	{ -17, -6, 18 }
 	
 	// right chassis ports
-	,{ 5, 6 }
+	,{ 8, 2, -20 }
 
 	/**
 	 * TODOPRONE: set port
@@ -264,7 +271,7 @@ Drive ez_chassis (
 	 * 
 	 * TODOPRONE: tune wheel diameter
 	*/
-	,1.9
+	,3.25
 
 	/**
 	 * TODOPRTHREE: verify this is correct (blue motors for dt, right?)
@@ -320,13 +327,13 @@ Blocker blocker = Blocker(
 // 	pros::E_MOTOR_BRAKE_HOLD
 // );
 Chassis chassis = Chassis(
-	{lf_motor, /* lm_motor, */ lb_motor},
-	{rf_motor, /* rm_motor, */ rb_motor},
+	{lf_motor, lbb_motor, lbt_motor},
+	{rf_motor, rbb_motor, rbt_motor},
 	pros::E_MOTOR_BRAKE_COAST
 );
 Intake intake = Intake( 
 	{intake_motor_one, intake_motor_two},
-	pros::E_MOTOR_BRAKE_HOLD
+	pros::E_MOTOR_BRAKE_COAST
 );
 /**
  * TODO: add wing ports
