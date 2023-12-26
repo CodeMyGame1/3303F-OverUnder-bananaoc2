@@ -4,12 +4,10 @@
 
 class Blocker {
     public:
-        pros::ADIDigitalOut blocker_piston_1;
-        pros::ADIDigitalOut blocker_piston_2;
+        pros::ADIDigitalOut blocker_piston;
+        bool piston_enabled = true;
 
-        bool blocker_enabled = true;
-
-        Blocker(std::uint8_t blocker_port_1, std::uint8_t blocker_port_2);
+        Blocker(std::uint8_t blocker_port);
 
         void block_da_opponents();
 };

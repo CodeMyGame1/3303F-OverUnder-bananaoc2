@@ -61,7 +61,7 @@ void test_auton() {
     
     // ez_chassis.set_drive_pid(48, 127);
     // ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(90, 127);
+    ez_chassis.set_drive_pid(12, 127);
     ez_chassis.wait_drive();
 }
 
@@ -119,11 +119,12 @@ void risky_goal_side() {
 
     // starts intake running CONTINUOUSLY!
     pros::lcd::print(0, "running intake");
-    intake.intake_the_award();
+    intake.intake_motors.move(-100);
     // moves robot directly under elevation bar
     pros::lcd::print(0, "driving forward");
-    ez_chassis.set_drive_pid(8, 127);
+    ez_chassis.set_drive_pid(6, 127);
     ez_chassis.wait_drive();
+    pros::delay(210);
     // stops le intake
     intake.break_the_award();
 
@@ -134,110 +135,109 @@ void risky_goal_side() {
     // moves robot so its tip is touching the matchload bar
     // should ideally be holding first intaked triball + pushing alliance (matchload) triball in front
     pros::lcd::print(0, "moving backward");
-    ez_chassis.set_drive_pid(-42, 127, true);
+    ez_chassis.set_drive_pid(-38, 127, true);
     ez_chassis.wait_drive();
 
-    auton_reset();
+    // /**
+    //  * TODO: does this turn LEFT or RIGHT...?
+    // */
+    // auton_reset();
+    // pros::lcd::print(0, "turning \"left\"");
+    // ez_chassis.set_turn_pid(-45, 127);
+    // ez_chassis.wait_drive();
 
-    /**
-     * TODO: does this turn LEFT or RIGHT...?
-    */
-    pros::lcd::print(0, "turning \"left\"");
-    ez_chassis.set_turn_pid(-45, 127);
-    ez_chassis.wait_drive();
+    // // opens wings
+    // pros::lcd::print(0, "opening wings");
+    // wings.open();
 
-    // opens wings
-    pros::lcd::print(0, "opening wings");
-    wings.open();
+    // // moves halfway the matchload bar
+    // pros::lcd::print(0, "moving backward");
+    // ez_chassis.set_drive_pid(-10, 127, true);
+    // ez_chassis.wait_drive();
 
-    // moves fully up the matchload bar, hopefully (?) getting the matchload zone triball OUTTA THERE
-    pros::lcd::print(0, "moving backward");
-    ez_chassis.set_drive_pid(-20, 127, true);
-    ez_chassis.wait_drive();
+    // auton_reset();
 
-    auton_reset();
+    // // turns a LITTLE towards the goal
+    // pros::lcd::print(0, "turning \"left\"");
+    // ez_chassis.set_turn_pid(-45, 127);
+    // ez_chassis.wait_drive();
 
-    // turns a LITTLE towards the goal
-    pros::lcd::print(0, "turning \"left\"");
-    ez_chassis.set_turn_pid(-45, 127);
-    ez_chassis.wait_drive();
+    // // furiously (?) scores into the goal
+    // pros::lcd::print(0, "moving backward");
+    // ez_chassis.set_drive_pid(-12, 127);
+    // ez_chassis.wait_drive();
 
-    // furiously (?) scores into the goal
-    pros::lcd::print(0, "moving backward");
-    ez_chassis.set_drive_pid(-12, 127);
-    ez_chassis.wait_drive();
+    // // backs out of the goal a little 
+    // pros::lcd::print(0, "moving forward");
+    // ez_chassis.set_drive_pid(10, 127);
+    // ez_chassis.wait_drive();
 
-    // backs out of the goal a little 
-    pros::lcd::print(0, "moving forward");
-    ez_chassis.set_drive_pid(10, 127);
-    ez_chassis.wait_drive();
+    // auton_reset();
 
-    auton_reset();
+    // // turns around (intake now facing goal!)
+    // pros::lcd::print(0, "do a barrel roll");
+    // ez_chassis.set_turn_pid(180, 127);
+    // ez_chassis.wait_drive();
 
-    // turns around (intake now facing goal!)
-    pros::lcd::print(0, "do a barrel roll");
-    ez_chassis.set_turn_pid(180, 127);
-    ez_chassis.wait_drive();
+    // // starts outtake running
+    // pros::lcd::print(0, "waits to outtake");
+    // intake.outtake_the_award();
 
-    // starts outtake running
-    pros::lcd::print(0, "waits to outtake");
-    intake.outtake_the_award();
+    // // rams into the goal again to score triball
+    // pros::lcd::print(0, "moving backward");
+    // ez_chassis.set_drive_pid(10, 127);
+    // ez_chassis.wait_drive();
 
-    // rams into the goal again to score triball
-    pros::lcd::print(0, "moving backward");
-    ez_chassis.set_drive_pid(10, 127);
-    ez_chassis.wait_drive();
+    // // stops le intake
+    // intake.break_the_award();
 
-    // stops le intake
-    intake.break_the_award();
+    // /**
+    //  * MOVE: scoring TWO MORE TRIBALLS????
+    // */
 
-    /**
-     * MOVE: scoring TWO MORE TRIBALLS????
-    */
+    // // backs out of the goal again
+    // pros::lcd::print(0, "moving backward");
+    // ez_chassis.set_drive_pid(-10, 127);
+    // ez_chassis.wait_drive();
 
-    // backs out of the goal again
-    pros::lcd::print(0, "moving backward");
-    ez_chassis.set_drive_pid(-10, 127);
-    ez_chassis.wait_drive();
+    // auton_reset();
 
-    auton_reset();
+    // // turns towards the FOURTH triball yeah babyy we're on a roll!! >:))
+    // pros::lcd::print(0, "turning \"left\"");
+    // ez_chassis.set_turn_pid(-75, 127);
+    // ez_chassis.wait_drive();
 
-    // turns towards the FOURTH triball yeah babyy we're on a roll!! >:))
-    pros::lcd::print(0, "turning \"left\"");
-    ez_chassis.set_turn_pid(-75, 127);
-    ez_chassis.wait_drive();
+    // // starts intake running
+    // pros::lcd::print(0, "moving forward");
+    // intake.intake_the_award();
+    // // goes TOWARDS le fourth triball :>
+    // ez_chassis.set_drive_pid(50, 127, true);
+    // ez_chassis.wait_drive();
+    // // stops le intake
+    // intake.break_the_award();
 
-    // starts intake running
-    pros::lcd::print(0, "moving forward");
-    intake.intake_the_award();
-    // goes TOWARDS le fourth triball :>
-    ez_chassis.set_drive_pid(50, 127, true);
-    ez_chassis.wait_drive();
-    // stops le intake
-    intake.break_the_award();
+    // auton_reset();
 
-    auton_reset();
+    // // turns around to face the goal DIAGONALLY
+    // ez_chassis.set_turn_pid(140, 127);
+    // ez_chassis.wait_drive();
 
-    // turns around to face the goal DIAGONALLY
-    ez_chassis.set_turn_pid(140, 127);
-    ez_chassis.wait_drive();
+    // // goes towards the goal a bit (but not enough to like accidentally intake the outtaked triball :grimacing:)
+    // ez_chassis.set_drive_pid(16, 127, true);
+    // ez_chassis.wait_drive();
 
-    // goes towards the goal a bit (but not enough to like accidentally intake the outtaked triball :grimacing:)
-    ez_chassis.set_drive_pid(16, 127, true);
-    ez_chassis.wait_drive();
+    // // starts outtake running
+    // intake.outtake_the_award();
+    // // leeway for outtake to outtake
+    // pros::delay(250);
+    // // stops le outtake
+    // intake.break_the_award();
 
-    // starts outtake running
-    intake.outtake_the_award();
-    // leeway for outtake to outtake
-    pros::delay(250);
-    // stops le outtake
-    intake.break_the_award();
+    // auton_reset();
 
-    auton_reset();
-
-    // turns around towards the FIFTH TRIBALL???
-    ez_chassis.set_turn_pid(-150, 127);
-    ez_chassis.wait_drive();
+    // // turns around towards the FIFTH TRIBALL???
+    // ez_chassis.set_turn_pid(-150, 127);
+    // ez_chassis.wait_drive();
 
     // works as intended up until this point
 

@@ -55,7 +55,7 @@
 #include "autons.hpp"
 
 extern Blocker blocker;
-extern Catapult catapult;
+// extern Catapult catapult;
 extern Chassis chassis;
 extern Drive ez_chassis;
 extern Intake intake;

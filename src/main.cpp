@@ -32,6 +32,10 @@
  * - add two rubberbands on flywheel motors
  * - maybe cut down flywheel axle bc too long?
  * - gears skipping & interfering on left side
+ * - the right side (with the intake as the front) sleds are kinda tilted-
+ * - battery mount
+ * - replace keps nut on IMU with actual locknut
+ * - see if auton is legal (can't pass elevation bar but can hover over it!)
 */
 
 /**
@@ -159,7 +163,7 @@ pros::Motor lbt_motor(18);
 
 // R
 pros::Motor rf_motor(8);
-pros::Motor rbb_motor(2);
+pros::Motor rbb_motor(16);
 pros::Motor rbt_motor(-20);
 
 /**
@@ -179,7 +183,7 @@ pros::Motor_Group right_drive({
 */
 
 pros::Motor intake_motor_one(9);
-pros::Motor intake_motor_two(-1);
+pros::Motor intake_motor_two(-11);
 
 /**
  * TODO: set ports!
@@ -259,7 +263,7 @@ Drive ez_chassis (
 	 * TODOPRONE: set port
 	*/
 	// IMU port
-	,7
+	,15
 
 	// wheel diameter
 	/**
@@ -271,7 +275,7 @@ Drive ez_chassis (
 	 * 
 	 * TODOPRONE: tune wheel diameter
 	*/
-	,3.25
+	,1.9
 
 	/**
 	 * TODOPRTHREE: verify this is correct (blue motors for dt, right?)
@@ -318,7 +322,6 @@ Drive ez_chassis (
  * TODO: add blocker ports
 */
 Blocker blocker = Blocker(
-	'A',
 	'B'
 );
 // Catapult catapult = Catapult(
@@ -339,8 +342,7 @@ Intake intake = Intake(
  * TODO: add wing ports
 */
 Wings wings = Wings(
-	'C',
-	'D'
+	'A'
 );
 
 /**
@@ -448,6 +450,7 @@ void autonomous() {
 	ez_chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
 	
 	risky_goal_side();
+	// goal_side_two();
 
 	// test_auton();
 	// drive_example();
