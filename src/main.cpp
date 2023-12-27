@@ -18,14 +18,20 @@
 */
 
 /**
+ * RUSH TODO: (12/26):
+ * - AUTONS! 
+ * - replace IMU Keps nut with locknut
+ * - replace IMU with new wire (+ find new place for battery and add a battery mount )
+*/
+
+/**
  * RUSH TODO: (bublin moment)
- * - add IMU
- * - add ports!
- * - put rubber nuts on intake hardstop screw
+ * - intake hardstop
+ *   - screw method (not using for now)
+ *     - put rubber nuts on intake hardstop screw
  * - add bigger sprocket to intake system (on the outside!)
  * - (when looking from intake side: bottom top right) -> securely fasten second rubber band (twist & stretch over the motor case!)
- * - wire motors + pneumatics
- * - shorten string on blocker so it doesn't interfere with other components when retracted
+ * - wire pneumatics
  * - find better place for battery
  * - port 8 might be loose connection
  * - build side hang!
@@ -36,6 +42,8 @@
  * - battery mount
  * - replace keps nut on IMU with actual locknut
  * - see if auton is legal (can't pass elevation bar but can hover over it!)
+ * - sorting:
+ *   - see if we actually want to use our blocker
 */
 
 /**
@@ -449,7 +457,7 @@ void autonomous() {
 	ez_chassis.reset_drive_sensor(); // Reset drive sensors to 0
 	ez_chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
 	
-	risky_goal_side();
+	risky_far_side();
 	// goal_side_two();
 
 	// test_auton();

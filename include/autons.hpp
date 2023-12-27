@@ -8,6 +8,6 @@ void test_auton();
 
 void drive_example();
 
-void risky_goal_side();
-
 void goal_side_two();
+
+void risky_far_side();

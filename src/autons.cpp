@@ -88,7 +88,12 @@ void drive_example() {
 // remember, INTAKE is in front!
 /**
  * AUTON DESC:
- * - starts wherever the top-left robot in this starts: https://www.youtube.com/watch?v=bTMBQ_n-3PQ; the WHOLE square, not straddling two squares
+ * - as per video in DMs (CURRENT ITERATION:) starts touching the matchload bar
+ * - as per YouTube video: starts wherever the top-left robot in this starts: https://www.youtube.com/watch?v=bTMBQ_n-3PQ; the WHOLE square, not straddling two squares
+ * 
+ * INSPIRATION:
+ * - https://www.youtube.com/watch?v=bTMBQ_n-3PQ
+ * - the video that Shlok sent in DMs
  * 
  * RISKS:
  * - could cross over the middle barrier
@@ -110,8 +115,9 @@ void drive_example() {
  * - take into account field variances / uncertainties!
 */
 
-void risky_goal_side() {
-    pros::lcd::print(0, "starting main auton");
+void risky_far_side() {
+    // starts with the "back" touching the matchload bar, the intake facing directly toward the elevation bar
+    pros::lcd::print(0, "starting risky far side auton");
 
     /**
      * MOVE: getting triball under elevation bar
@@ -119,14 +125,16 @@ void risky_goal_side() {
 
     // starts intake running CONTINUOUSLY!
     pros::lcd::print(0, "running intake");
-    intake.intake_motors.move(-100);
+    intake.intake_the_award();
     // moves robot directly under elevation bar
     pros::lcd::print(0, "driving forward");
     ez_chassis.set_drive_pid(6, 127);
     ez_chassis.wait_drive();
-    pros::delay(210);
+    // pros::delay(210);
     // stops le intake
     intake.break_the_award();
+
+    // works up until this point!
 
     /**
      * MOVE: get triball out of matchload bar
@@ -135,45 +143,73 @@ void risky_goal_side() {
     // moves robot so its tip is touching the matchload bar
     // should ideally be holding first intaked triball + pushing alliance (matchload) triball in front
     pros::lcd::print(0, "moving backward");
-    ez_chassis.set_drive_pid(-38, 127, true);
+    ez_chassis.set_drive_pid(-39, 127, true);
     ez_chassis.wait_drive();
 
-    // /**
-    //  * TODO: does this turn LEFT or RIGHT...?
-    // */
+    // turns clockwise in place, until the front of the robot is directed along the matchload bar, in the direction of the goal
+    auton_reset();
+    pros::lcd::print(0, "turning \"right\"");
+    ez_chassis.set_turn_pid(145, 127);
+    ez_chassis.wait_drive();
+
+    // opens wings
+    pros::lcd::print(0, "opening wings");
+    wings.open();
+
+    // outtakes intaked triball
+    intake.outtake_the_award();
+    pros::delay(1000);
+    intake.break_the_award();
+
+    // moves halfway up the matchload bar
+    pros::lcd::print(0, "moving backward");
+    ez_chassis.set_drive_pid(20, 127, true);
+    ez_chassis.wait_drive();
+
+    auton_reset();
+
+    // turns a LITTLE towards the goal
+    pros::lcd::print(0, "turning \"left\"");
+    ez_chassis.set_turn_pid(-45, 127);
+    ez_chassis.wait_drive();
+
+    auton_reset();
+
+    // turns FULLY around
+    ez_chassis.set_turn_pid(-185, 127);
+    ez_chassis.wait_drive();
+
+    wings.close();
+
+    // furiously (?) scores into the goal
+    pros::lcd::print(0, "moving backward");
+    ez_chassis.set_drive_pid(-20, 127);
+    ez_chassis.wait_drive();
+
+    // backs out of the goal a little 
+    pros::lcd::print(0, "moving forward");
+    ez_chassis.set_drive_pid(15, 127);
+    ez_chassis.wait_drive();
+
+    auton_reset();
+
+    // turn a liiiitle right
+    ez_chassis.set_turn_pid(5, 127);
+    ez_chassis.wait_drive();
+
+    // furiously (?) scores into the goal
+    pros::lcd::print(0, "moving backward");
+    ez_chassis.set_drive_pid(-20, 127);
+    ez_chassis.wait_drive();
+
+    // backs out of the goal a little 
+    pros::lcd::print(0, "moving forward");
+    ez_chassis.set_drive_pid(15, 127);
+    ez_chassis.wait_drive();
+
     // auton_reset();
-    // pros::lcd::print(0, "turning \"left\"");
-    // ez_chassis.set_turn_pid(-45, 127);
-    // ez_chassis.wait_drive();
 
-    // // opens wings
-    // pros::lcd::print(0, "opening wings");
-    // wings.open();
-
-    // // moves halfway the matchload bar
-    // pros::lcd::print(0, "moving backward");
-    // ez_chassis.set_drive_pid(-10, 127, true);
-    // ez_chassis.wait_drive();
-
-    // auton_reset();
-
-    // // turns a LITTLE towards the goal
-    // pros::lcd::print(0, "turning \"left\"");
-    // ez_chassis.set_turn_pid(-45, 127);
-    // ez_chassis.wait_drive();
-
-    // // furiously (?) scores into the goal
-    // pros::lcd::print(0, "moving backward");
-    // ez_chassis.set_drive_pid(-12, 127);
-    // ez_chassis.wait_drive();
-
-    // // backs out of the goal a little 
-    // pros::lcd::print(0, "moving forward");
-    // ez_chassis.set_drive_pid(10, 127);
-    // ez_chassis.wait_drive();
-
-    // auton_reset();
-
+    //// NOT DOING THIS PART!
     // // turns around (intake now facing goal!)
     // pros::lcd::print(0, "do a barrel roll");
     // ez_chassis.set_turn_pid(180, 127);
@@ -191,14 +227,14 @@ void risky_goal_side() {
     // // stops le intake
     // intake.break_the_award();
 
-    // /**
-    //  * MOVE: scoring TWO MORE TRIBALLS????
-    // */
-
     // // backs out of the goal again
     // pros::lcd::print(0, "moving backward");
     // ez_chassis.set_drive_pid(-10, 127);
     // ez_chassis.wait_drive();
+
+    // /**
+    //  * MOVE: scoring TWO MORE TRIBALLS????
+    // */
 
     // auton_reset();
 
@@ -239,7 +275,7 @@ void risky_goal_side() {
     // ez_chassis.set_turn_pid(-150, 127);
     // ez_chassis.wait_drive();
 
-    // works as intended up until this point
+    // // works as intended up until this point
 
     // // starts intake
     // intake.intake_the_award();
