@@ -115,6 +115,49 @@ void drive_example() {
  * - take into account field variances / uncertainties!
 */
 
+void far_side() {
+    intake.intake_motors.set_brake_modes(MOTOR_BRAKE_HOLD);
+
+    intake.intake_the_award();
+    ez_chassis.set_drive_pid(6, 50);
+    ez_chassis.wait_drive();
+    pros::delay(100);
+    intake.break_the_award();
+
+    ez_chassis.set_drive_pid(-34, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_turn_pid(45, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_drive_pid(-20, 127);
+    pros::delay(150);
+    wings.open();
+    ez_chassis.wait_drive();
+    ez_chassis.set_turn_pid(135, 127);
+    ez_chassis.wait_drive();
+    pros::delay(1000);
+    wings.close();
+    ez_chassis.set_turn_pid(70, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_drive_pid(-25, 127);
+    wings.close();
+    ez_chassis.wait_drive();
+    ez_chassis.set_drive_pid(15, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_turn_pid(-95, 127);
+    ez_chassis.wait_drive();
+    intake.outtake_the_award();
+    pros::delay(750);
+    ez_chassis.set_drive_pid(25, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_drive_pid(-15, 127);
+    ez_chassis.wait_drive();
+    intake.break_the_award();
+}
+
+void near_side() {
+    
+}
+
 void risky_far_side() {
     // starts with the "back" touching the matchload bar, the intake facing directly toward the elevation bar
     pros::lcd::print(0, "starting risky far side auton");
@@ -126,12 +169,14 @@ void risky_far_side() {
     // starts intake running CONTINUOUSLY!
     pros::lcd::print(0, "running intake");
     intake.intake_the_award();
-    // moves robot directly under elevation bar
+    intake.intake_motors.set_brake_modes(MOTOR_BRAKE_HOLD);
+    // moves robot directly under elevaton bar
     pros::lcd::print(0, "driving forward");
-    ez_chassis.set_drive_pid(6, 127);
+    ez_chassis.set_drive_pid(6, 50);
     ez_chassis.wait_drive();
     // pros::delay(210);
     // stops le intake
+    pros::delay(100);
     intake.break_the_award();
 
     // works up until this point!
@@ -143,7 +188,7 @@ void risky_far_side() {
     // moves robot so its tip is touching the matchload bar
     // should ideally be holding first intaked triball + pushing alliance (matchload) triball in front
     pros::lcd::print(0, "moving backward");
-    ez_chassis.set_drive_pid(-39, 127, true);
+    ez_chassis.set_drive_pid(-34, 127, true);
     ez_chassis.wait_drive();
 
     // turns clockwise in place, until the front of the robot is directed along the matchload bar, in the direction of the goal
@@ -163,23 +208,25 @@ void risky_far_side() {
 
     // moves halfway up the matchload bar
     pros::lcd::print(0, "moving backward");
-    ez_chassis.set_drive_pid(20, 127, true);
+    ez_chassis.set_drive_pid(14, 127, true);
     ez_chassis.wait_drive();
 
     auton_reset();
 
     // turns a LITTLE towards the goal
     pros::lcd::print(0, "turning \"left\"");
-    ez_chassis.set_turn_pid(-45, 127);
+    ez_chassis.set_turn_pid(-65, 127);
     ez_chassis.wait_drive();
 
     auton_reset();
 
     // turns FULLY around
-    ez_chassis.set_turn_pid(-185, 127);
+    ez_chassis.set_turn_pid(-150, 100);
+    pros::delay(250);
+    wings.close();
     ez_chassis.wait_drive();
 
-    wings.close();
+    // wings.close();
 
     // furiously (?) scores into the goal
     pros::lcd::print(0, "moving backward");
@@ -194,7 +241,7 @@ void risky_far_side() {
     auton_reset();
 
     // turn a liiiitle right
-    ez_chassis.set_turn_pid(5, 127);
+    ez_chassis.set_turn_pid(20, 127);
     ez_chassis.wait_drive();
 
     // furiously (?) scores into the goal
@@ -304,6 +351,8 @@ void risky_far_side() {
     // pros::delay(250);
     // // stop le outtake
     // intake.break_the_award();
+
+    intake.intake_motors.set_brake_modes(MOTOR_BRAKE_COAST);
 }
 
 // model auton:
