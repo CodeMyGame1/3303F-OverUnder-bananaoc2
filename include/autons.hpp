@@ -10,8 +10,10 @@ void drive_example();
 
 void goal_side_two();
 
-void far_side();
+void faulty_near_side();
 
 void near_side();
+
+void far_side();
 
 void risky_far_side();

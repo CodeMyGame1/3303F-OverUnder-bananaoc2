@@ -379,6 +379,7 @@ void initialize() {
 	/**
 	 * Auton Selector for sample autons
 	*/
+
 	// ez::as::auton_selector.add_autons({
 	// 	Auton("Example Drive\n\nDrive forward and come back.", drive_example),
 	// 	Auton("Example Turn\n\nTurn 3 times.", turn_example),
@@ -388,11 +389,10 @@ void initialize() {
 	// 	Auton("Combine all 3 movements", combining_movements),
 	// 	Auton("Interference\n\nAfter driving forward, robot performs differently if interfered or not.", interfered_example),
 	// });
-	// ez::as::auton_selector.add_autons({
-	// 	Auton("Risky Goal Side Auton", risky_goal_side),
-	// 	Auton("Goal Side Auton 2", goal_side_two)
-	// });
-	// ez::as::initialize();
+	ez::as::auton_selector.add_autons({
+		Auton("Far Side Auton", far_side),
+		Auton("Near Side Auton", near_side)
+	});
 
 	/**
 	 * LEMLIB:
@@ -413,7 +413,8 @@ void initialize() {
 	*/
 	// default_constants();
 
-	pros::lcd::initialize();
+	// pros::lcd::initialize();
+	ez::as::initialize();
 } 
 
 /**
@@ -457,7 +458,9 @@ void autonomous() {
 	ez_chassis.reset_drive_sensor(); // Reset drive sensors to 0
 	ez_chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
 	
-	far_side();
+	ez::as::auton_selector.call_selected_auton();
+
+	// near_side();
 	// goal_side_two();
 
 	// test_auton();
