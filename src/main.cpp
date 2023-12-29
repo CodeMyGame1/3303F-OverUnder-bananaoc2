@@ -391,7 +391,8 @@ void initialize() {
 	// });
 	ez::as::auton_selector.add_autons({
 		Auton("Far Side Auton", far_side),
-		Auton("Near Side Auton", near_side)
+		Auton("Near Side Auton", near_side),
+		Auton("Test Far Side Auton", test_far_side)
 	});
 
 	/**

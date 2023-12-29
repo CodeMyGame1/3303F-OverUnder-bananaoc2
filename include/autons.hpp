@@ -16,4 +16,4 @@ void near_side();
 
 void far_side();
 
-void risky_far_side();
+void test_far_side();
