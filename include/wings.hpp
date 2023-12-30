@@ -1,6 +1,20 @@
 #pragma once
 
 #include "main.h"
-// #include "robot.hpp"
 
-void wing_it();
+class Wings {
+    public:
+        pros::ADIDigitalOut wing_piston;
+
+        bool wings_enabled = false;
+
+        Wings(std::uint8_t wing_port);
+
+        void update();
+
+        void close();
+
+        void open();
+
+        void wing_it();
+};

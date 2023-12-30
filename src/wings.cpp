@@ -1,29 +1,33 @@
 #include "main.h"
-// #include "robot.hpp"
 
-pros::ADIDigitalOut left_wing('B');
-pros::ADIDigitalOut right_wing('C');
+// haha so "left" and "right" are relative to the front of the robot being the intake :clown:
 
-bool wings_enabled = false;
-bool wings_reset = false;
+Wings::Wings(std::uint8_t wing_port) : wing_piston(wing_port) {
+  wings_enabled = false;
+  wing_piston.set_value(0);
+}
 
-void wing_it() {
-    // start of program
-    if (!wings_reset) {
-        left_wing.set_value(0);
-        right_wing.set_value(0);
+void Wings::update() {
+  wing_piston.set_value(wings_enabled);
+}
 
-        wings_reset = true;
-    }
+void Wings::close() {
+  wings_enabled = false;
+  
+  this->update();
+}
 
-    // toggle wing states
-    /**
-     * TODO: sometimes, the first time i press it, it doesn't detect
-    */
-    if (controller.get_digital_new_press(DIGITAL_L2)) {
-        wings_enabled = !wings_enabled;
+void Wings::open() {
+  wings_enabled = true;
 
-        left_wing.set_value(wings_enabled);
-        right_wing.set_value(wings_enabled);
-    }
+  this->update();
+}
+
+/**
+  * TODO: sometimes, the first time i press it, it doesn't detect
+*/
+void Wings::wing_it() {
+  wings_enabled = !wings_enabled;
+
+  this->update();
 }

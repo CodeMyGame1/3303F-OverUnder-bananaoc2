@@ -1,24 +1,13 @@
 #include "main.h"
+#include <string>
 
-/**
- * TODO: verify port!
-*/
-pros::ADIDigitalOut blocker_piston('A');
+Blocker::Blocker(std::uint8_t blocker_port) : blocker_piston(blocker_port) {
+    piston_enabled = true;
+    blocker_piston.set_value(0);
+}
 
-// when piston fully extended, blocker is closed!
-bool piston_enabled = true;
-bool blocker_reset = false;
+void Blocker::block_da_opponents() {
+    piston_enabled = !piston_enabled;
 
-void block_da_opponents() {
-    if (!blocker_reset) {
-        blocker_piston.set_value(1);
-        
-        blocker_reset = true;
-    }
-
-    if (controller.get_digital_new_press(DIGITAL_L1)) {
-        piston_enabled = !piston_enabled;
-
-        blocker_piston.set_value(piston_enabled);
-    }
+    blocker_piston.set_value(piston_enabled);
 }
