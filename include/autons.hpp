@@ -17,3 +17,9 @@ void near_side();
 void far_side();
 
 void test_far_side();
+
+void drive_back();
+
+void skills();
+
+void auton3();

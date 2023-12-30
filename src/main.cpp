@@ -390,9 +390,12 @@ void initialize() {
 	// 	Auton("Interference\n\nAfter driving forward, robot performs differently if interfered or not.", interfered_example),
 	// });
 	ez::as::auton_selector.add_autons({
+		Auton("near side holly", auton3),
 		Auton("Far Side Auton", far_side),
+		Auton("Drive back", drive_back),
 		Auton("Near Side Auton", near_side),
-		Auton("Test Far Side Auton", test_far_side)
+		Auton("Test Far Side Auton", test_far_side),
+		Auton("Skills", skills)
 	});
 
 	/**
