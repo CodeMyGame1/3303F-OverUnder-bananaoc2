@@ -125,19 +125,22 @@ void far_side() {
     pros::delay(100);
     intake.break_the_award();
 
-    ez_chassis.set_drive_pid(-34, 127);
+    ez_chassis.set_drive_pid(-34, 110);
     ez_chassis.wait_drive();
     ez_chassis.set_turn_pid(-45, 127);
     ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(-20, 127);
-    pros::delay(50);
+    ez_chassis.set_drive_pid(-25, 127);
     wings.open();
     ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(-115, -80);
+    ez_chassis.set_turn_pid(-115, 100);
     ez_chassis.wait_drive();
-    pros::delay(600);
+    pros::delay(450);
     wings.close();
-    ez_chassis.set_turn_pid(-70, 127);
+    ez_chassis.set_turn_pid(-45, 127);
+    pros::delay(100);
+    ez_chassis.set_drive_pid(-5, 127);
+    pros::delay(100);
+    ez_chassis.set_swing_pid(LEFT_SWING, -90, 127);
     ez_chassis.wait_drive();
     ez_chassis.set_drive_pid(-25, 127);
     wings.close();
@@ -147,14 +150,14 @@ void far_side() {
     ez_chassis.set_turn_pid(115, 127);
     ez_chassis.wait_drive();
     intake.outtake_the_award();
-    pros::delay(750);
+    pros::delay(250);
     ez_chassis.set_drive_pid(25, 115);
     ez_chassis.wait_drive();
     ez_chassis.set_drive_pid(-15, 127);
     ez_chassis.wait_drive();
     intake.break_the_award();
 
-    ez_chassis.set_turn_pid(45, 127);
+    ez_chassis.set_turn_pid(15, 127);
     ez_chassis.wait_drive();
     ez_chassis.set_drive_pid(17, 127);
     ez_chassis.wait_drive();
@@ -165,19 +168,65 @@ void far_side() {
     ez_chassis.wait_drive();
 }
 
-void near_side() {
-    ez_chassis.set_drive_pid(-14, 127);
+void auton3() {
+    ez_chassis.set_drive_pid(49, 127);
+    ez_chassis.wait_drive();
+    wings.open();
+    ez_chassis.set_turn_pid(180, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_drive_pid(48, 127);
+    wings.close();
+    ez_chassis.wait_drive();
+
+    ez_chassis.set_turn_pid(100, 127);
+    ez_chassis.wait_drive();
+    wings.close();
+
+    auton_reset();
+
+    ez_chassis.set_drive_pid(-18, 127);
     wings.open();
     ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(90, 100);
+    ez_chassis.set_turn_pid(45, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_drive_pid(-30, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_drive_pid(20, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_turn_pid(0, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_drive_pid(3, 127);
+    ez_chassis.wait_drive();
+    wings.open();
+    ez_chassis.wait_drive();
+    ez_chassis.set_turn_pid(80, 100);
     ez_chassis.wait_drive();
     pros::delay(500);
     wings.close();
+}
+
+void near_side() {
+    ez_chassis.set_drive_pid(-14, 127);
+    ez_chassis.wait_drive();
     ez_chassis.set_turn_pid(27, 127);
     ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(-20, 127);
+    ez_chassis.set_drive_pid(-24, 127);
     ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(10, 127);
+    ez_chassis.set_drive_pid(20, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_turn_pid(0, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_drive_pid(3, 127);
+    ez_chassis.wait_drive();
+    wings.open();
+    ez_chassis.wait_drive();
+    ez_chassis.set_turn_pid(80, 100);
+    ez_chassis.wait_drive();
+    pros::delay(500);
+    wings.close();
+    ez_chassis.set_turn_pid(0, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_drive_pid(-4, 127);
     ez_chassis.wait_drive();
     ez_chassis.set_turn_pid(-90, 127);
     ez_chassis.wait_drive();
@@ -188,6 +237,29 @@ void near_side() {
     ez_chassis.set_drive_pid(35, 127);
     ez_chassis.wait_drive();
     wings.open();
+
+    // ez_chassis.set_drive_pid(-50, 127);
+    // ez_chassis.wait_drive();
+    // wings.open();
+    // ez_chassis.set_turn_pid(-90, 127);
+    // ez_chassis.wait_drive();
+
+    // ez_chassis.set_drive_pid(-20, 127);
+    // ez_chassis.wait_drive();
+    // wings.close();
+}
+
+void drive_back() {
+    ez_chassis.set_drive_pid(-45, 127);
+    ez_chassis.wait_drive();
+
+
+    ez_chassis.set_drive_pid(15, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_turn_pid(-45, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_drive_pid(-45, 127);
+    ez_chassis.wait_drive();
 }
 
 void test_far_side() { // attempt to get other 3 balls
@@ -196,7 +268,7 @@ void test_far_side() { // attempt to get other 3 balls
     intake.intake_the_award();
     ez_chassis.set_drive_pid(6, 50);
     ez_chassis.wait_drive();
-    pros::delay(100);
+    pros::delay(75);
     intake.break_the_award();
 
     ez_chassis.set_drive_pid(-34, 127);
@@ -204,12 +276,10 @@ void test_far_side() { // attempt to get other 3 balls
     ez_chassis.set_turn_pid(-45, 127);
     ez_chassis.wait_drive();
     ez_chassis.set_drive_pid(-20, 127);
-    pros::delay(50);
     wings.open();
     ez_chassis.wait_drive();
     ez_chassis.set_turn_pid(-115, -80);
     ez_chassis.wait_drive();
-    pros::delay(600);
     wings.close();
     ez_chassis.set_turn_pid(-70, 127);
     ez_chassis.wait_drive();
@@ -221,19 +291,85 @@ void test_far_side() { // attempt to get other 3 balls
     ez_chassis.set_turn_pid(115, 127);
     ez_chassis.wait_drive();
     intake.outtake_the_award();
-    pros::delay(750);
+    pros::delay(100);
     ez_chassis.set_drive_pid(25, 115);
     ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(-15, 127);
+    ez_chassis.set_drive_pid(-20, 127);
     ez_chassis.wait_drive();
     intake.break_the_award();
 
-    ez_chassis.set_turn_pid(45, 127);
+    // other 3 balls
+
+    ez_chassis.set_turn_pid(30, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_drive_pid(40, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_turn_pid(0, 127);
+    ez_chassis.wait_drive();
+    intake.intake_the_award();
+    ez_chassis.set_drive_pid(7, 100);
+    ez_chassis.wait_drive();
+    intake.break_the_award();
+
+    ez_chassis.set_drive_pid(-7, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_turn_pid(-90, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_drive_pid(-15, 127);
+    ez_chassis.wait_drive();
+    wings.open();
+
+    ez_chassis.set_turn_pid(90, 100);
+    ez_chassis.wait_drive();
+    pros::delay(250);
+    ez_chassis.set_turn_pid(0, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_drive_pid(-35, 127);
     ez_chassis.wait_drive();
     ez_chassis.set_drive_pid(25, 127);
     ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(0, 127);
-    // ez_chassis.
+
+    ez_chassis.set_turn_pid(180, 127);
+    ez_chassis.wait_drive();
+    intake.outtake_the_award();
+    ez_chassis.set_drive_pid(25, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_drive_pid(-35, 127);
+    ez_chassis.wait_drive();
+
+    wings.close();
+    intake.break_the_award();
+}
+
+void skills() {
+    ez_chassis.set_drive_pid(-14, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_turn_pid(27, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_drive_pid(-24, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_drive_pid(20, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_turn_pid(0, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_drive_pid(3, 127);
+    ez_chassis.wait_drive();
+    wings.open();
+    ez_chassis.wait_drive();
+    ez_chassis.set_turn_pid(80, 100);
+    ez_chassis.wait_drive();
+    pros::delay(500);
+    wings.close();
+
+    ez_chassis.set_drive_pid(-10, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_turn_pid(110, 127);
+    ez_chassis.wait_drive();
+    ez_chassis.set_drive_pid(16, 127);
+    ez_chassis.wait_drive();
+    wings.open();
+
+    intake.outtake_the_award();
 }
 
 void risky_far_side() {
