@@ -2,7 +2,6 @@
 
 #include "main.h"
 // #include "robot.hpp"
-// These are Anjali's local changes in her local repository
 
 class Intake {
     public:
