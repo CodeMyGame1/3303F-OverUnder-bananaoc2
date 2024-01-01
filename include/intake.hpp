@@ -2,6 +2,7 @@
 
 #include "main.h"
 // #include "robot.hpp"
+#pragma once
 
 class Intake {
     public:
