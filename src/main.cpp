@@ -257,6 +257,8 @@ pros::Imu inertial_sensor(7);
  * START: EZTEMPLATE
 */
 
+// gear ratio 4:50	
+
 Drive ez_chassis (
 	/**
 	 * TODOPRONE: set these ports
@@ -326,12 +328,12 @@ Drive ez_chassis (
  * START: ROBOT COMPONENT INITIALIZATION
 */
 
-/**
- * TODO: add blocker ports
-*/
-Blocker blocker = Blocker(
-	'B'
-);
+// /**
+//  * TODO: add blocker ports
+// */
+// Blocker blocker = Blocker(
+// 	'B'
+// );
 // Catapult catapult = Catapult(
 // 	20,
 // 	12,
@@ -342,10 +344,10 @@ Chassis chassis = Chassis(
 	{rf_motor, rbb_motor, rbt_motor},
 	pros::E_MOTOR_BRAKE_COAST
 );
-Intake intake = Intake( 
-	{intake_motor_one, intake_motor_two},
-	pros::E_MOTOR_BRAKE_COAST
-);
+// Intake intake = Intake( 
+// 	{intake_motor_one, intake_motor_two},
+// 	pros::E_MOTOR_BRAKE_COAST
+// );
 /**
  * TODO: add wing ports
 */
@@ -522,12 +524,12 @@ void opcontrol() {
 		// 	catapult.toggle_catapult();
 		// }
 
-		/**
-		 * BLOCKER:
-		*/
-		if (controller.get_digital_new_press(DIGITAL_L1)) {
-			blocker.block_da_opponents();
-		} 
+		// /**
+		//  * BLOCKER:
+		// */
+		// if (controller.get_digital_new_press(DIGITAL_L1)) {
+		// 	blocker.block_da_opponents();
+		// } 
 
 		/**
 		 * WINGS:
@@ -536,22 +538,22 @@ void opcontrol() {
 			wings.wing_it();
 		}
 
-		/**
-		 * INTAKE:
-		*/
-		// if the intake and outtake buttons are either BOTH pressed or BOTH depressed...
-		if (R1_pressed == R2_pressed) {
-			// don't do anything!
-			intake.break_the_award();
-		}
-		// intake
-		else if (R1_pressed) {
-			intake.intake_the_award();
-		}
-		// outtake (ALSO RUNS THE FLYWHEEL!!!)
-		else if (R2_pressed) {
-			intake.outtake_the_award();
-		}
+		// /**
+		//  * INTAKE:
+		// */
+		// // if the intake and outtake buttons are either BOTH pressed or BOTH depressed...
+		// if (R1_pressed == R2_pressed) {
+		// 	// don't do anything!
+		// 	intake.break_the_award();
+		// }
+		// // intake
+		// else if (R1_pressed) {
+		// 	intake.intake_the_award();
+		// }
+		// // outtake (ALSO RUNS THE FLYWHEEL!!!)
+		// else if (R2_pressed) {
+		// 	intake.outtake_the_award();
+		// }
 
 		/**
 		 * END: HANDLING CONTROLLER INPUTS
