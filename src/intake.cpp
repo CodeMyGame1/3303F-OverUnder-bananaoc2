@@ -1,24 +1,21 @@
-// #include "main.h"
-// #include <string>
+#include "main.h"
+#include <string>
 
-// Intake::Intake(std::vector<pros::Motor> motor_ports, pros::motor_brake_mode_e brake_mode) : intake_motors(motor_ports) {
-//     brake_mode = brake_mode;
-// };
+// constructor
+Intake::Intake(std::uint8_t intake_piston_port) : intake_pistons(intake_piston_port) {}
 
-// // runs WHEN controller.get_digital(DIGITAL_R1)
-// void Intake::intake_the_award() {
-//     intake_motors.move(-127);
-// }
+void Intake::update() {
+    intake_pistons.set_value(intake_enabled);
+}
 
-// // runs WHEN controller.get_digital(DIGITAL_R2)
-// /**
-//  * verify if this runs correctly
-// */
-// void Intake::outtake_the_award() {
-//     intake_motors.move(127);
-// }
+void Intake::extend_intake() {
+    intake_enabled = false;
 
-// // runs WHEN controller.get_digital(DIGITAL_R1) / controller.get_digital(DIGITAL_R2) DEPRESSED
-// void Intake::break_the_award() {
-//     intake_motors.brake();
-// }
+    this->update();
+}
+
+void Intake::retract_intake() {
+    intake_enabled = true;
+
+    this->update();
+}

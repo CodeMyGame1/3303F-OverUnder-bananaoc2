@@ -1,26 +1,26 @@
-/**
- * NOT IN USE RIGHT NOW
-*/
+// /**
+//  * NOT IN USE RIGHT NOW
+// */
 
-#pragma once
+// #pragma once
 
-#include "main.h"
-// #include "robot.hpp"
+// #include "main.h"
+// // #include "robot.hpp"
 
-class Catapult {
-    public:
-        pros::Motor catapult_motor;
-        pros::Rotation rotSensor;
+// class Catapult {
+//     public:
+//         pros::Motor catapult_motor;
+//         pros::Rotation rotSensor;
 
-        bool cata_state = false;
+//         bool cata_state = false;
 
-        Catapult(int cata_port, int rot_port, pros::motor_brake_mode_e brake_mode);
+//         Catapult(int cata_port, int rot_port, pros::motor_brake_mode_e brake_mode);
 
-        int get_formatted_angle();
+//         int get_formatted_angle();
 
-        void reset();
+//         void reset();
 
-        void toggle_catapult();
+//         void toggle_catapult();
 
-        void catapult_us_to_victory();
-};
+//         void catapult_us_to_victory();
+// };

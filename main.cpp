@@ -165,24 +165,38 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 */
 
 // L
-pros::Motor lf_motor(-17);
-pros::Motor lbb_motor(-6);
-pros::Motor lbt_motor(18);
+// pros::Motor lf_motor(-17);
+// pros::Motor lbb_motor(-6);
+// pros::Motor lbt_motor(18);
+pros::Motor left_top_front_motor(18);
+pros::Motor left_top_back_motor(20);
+pros::Motor left_bottom_front_motor(-19);
+pros::Motor left_bottom_back_motor(-17);
 
 // R
-pros::Motor rf_motor(8);
-pros::Motor rbb_motor(16);
-pros::Motor rbt_motor(-20);
+// pros::Motor rf_motor(8);
+// pros::Motor rbb_motor(16);
+// pros::Motor rbt_motor(-20);
+pros::Motor right_top_front_motor(-11);
+pros::Motor right_top_back_motor(-13);
+pros::Motor right_bottom_front_motor(10);
+pros::Motor right_bottom_back_motor(12);
 
 /**
  * DRIVETRAIN: MOTOR GROUPS
 */
+// pros::Motor_Group left_drive({
+// 	lf_motor, lbb_motor, lbt_motor
+// });
 pros::Motor_Group left_drive({
-	lf_motor, lbb_motor, lbt_motor
+	left_top_front_motor, left_top_back_motor, left_bottom_front_motor, left_bottom_back_motor
 });
 
+// pros::Motor_Group right_drive({
+// 	rf_motor, rbb_motor, rbt_motor
+// });
 pros::Motor_Group right_drive({
-	rf_motor, rbb_motor, rbt_motor
+	right_top_front_motor, right_top_back_motor, right_bottom_front_motor, right_bottom_back_motor
 });
 
 /**
@@ -264,10 +278,10 @@ Drive ez_chassis (
 	 * TODOPRONE: set these ports
 	*/
 	// left chassis ports
-	{ -17, -6, 18 }
+	{ 18, 20, -19, -17 }
 	
 	// right chassis ports
-	,{ 8, 2, -20 }
+	,{ -11, -13, 10, 12 }
 
 	/**
 	 * TODOPRONE: set port
@@ -340,19 +354,18 @@ Drive ez_chassis (
 // 	pros::E_MOTOR_BRAKE_HOLD
 // );
 Chassis chassis = Chassis(
-	{lf_motor, lbb_motor, lbt_motor},
-	{rf_motor, rbb_motor, rbt_motor},
+	{left_top_front_motor, left_top_back_motor, left_bottom_front_motor, left_bottom_back_motor},
+	{right_top_front_motor, right_top_back_motor, right_bottom_front_motor, right_bottom_back_motor},
 	pros::E_MOTOR_BRAKE_COAST
 );
-// Intake intake = Intake( 
-// 	{intake_motor_one, intake_motor_two},
-// 	pros::E_MOTOR_BRAKE_COAST
-// );
+Intake intake = Intake( 
+	'C'
+);
 /**
  * TODO: add wing ports
 */
 Wings wings = Wings(
-	'A'
+	'A', 'B'
 );
 
 /**
@@ -473,10 +486,6 @@ void autonomous() {
 	// drive_example();
 }
 
-
-bool L2_pressed = false;
-bool R2_pressed = false;
-
 /**
  * OPCONTROL: DESCRIPTION
  * 
@@ -511,7 +520,7 @@ void opcontrol() {
 		 * SECTION: CHECKING CONTROLLER INPUTS
 		 */
 		bool R1_pressed = controller.get_digital(DIGITAL_R1);
-		bool R2_pressed = controller.get_digital(DIGITAL_R2);
+		// bool R2_pressed = controller.get_digital(DIGITAL_R2);
 			
 		/**
 		 * START: HANDLING CONTROLLER INPUTS
@@ -538,22 +547,14 @@ void opcontrol() {
 			wings.wing_it();
 		}
 
-		// /**
-		//  * INTAKE:
-		// */
-		// // if the intake and outtake buttons are either BOTH pressed or BOTH depressed...
-		// if (R1_pressed == R2_pressed) {
-		// 	// don't do anything!
-		// 	intake.break_the_award();
-		// }
-		// // intake
-		// else if (R1_pressed) {
-		// 	intake.intake_the_award();
-		// }
-		// // outtake (ALSO RUNS THE FLYWHEEL!!!)
-		// else if (R2_pressed) {
-		// 	intake.outtake_the_award();
-		// }
+		/**
+		 * INTAKE:
+		*/
+		if (controller.get_digital(DIGITAL_R1)) {
+			intake.extend_intake();
+		} else {
+			intake.retract_intake();
+		}
 
 		/**
 		 * END: HANDLING CONTROLLER INPUTS
@@ -574,7 +575,8 @@ void opcontrol() {
 		*/
 		// currently hard-coded to run tank drive!
 		// chassis.tank_drive(controller.get_analog(ANALOG_LEFT_Y), controller.get_analog(ANALOG_RIGHT_Y));
-		ez_chassis.tank();
+		// ez_chassis.tank();
+		ez_chassis.arcade_standard(ez::SPLIT);
 
 		/**
 		 * END: RUN OTHER ROBOT FUNCTIONS
