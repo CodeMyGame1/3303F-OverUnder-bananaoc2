@@ -14,5 +14,3 @@ class Chassis {
 
         void tank_drive(int left, int right);
 };
-
-// void drive();
