@@ -27,16 +27,13 @@ const int SWING_SPEED = 90;
  * - https://www.vexrobotics.com/over-under-manual
  * - https://kb.vex.com/hc/en-us/articles/15549324090772-Understanding-the-VRC-Over-Under-Field-Layout
  * - https://github.com/EZ-Robotics/EZ-Template/blob/v2.2.0/src/autons.cpp
- * 
- * MODELING AUTON OFF OF:
- * - https://www.youtube.com/watch?v=bTMBQ_n-3PQ
 */
 
 /**
  * TODO: tune!
 */
 // P: get where u wanna go
-// I: GO FASTER
+// I: GO FASTER (this increases exponentially so be careful with this term)
 // D: slow down near the end
 
 // move and turn functions because i dont want to type them out every single time i want to do something
