@@ -58,7 +58,7 @@
 // extern Catapult catapult;
 extern Chassis chassis;
 extern Drive ez_chassis;
-// extern Intake intake;
+extern Intake intake;
 extern Wings wings;
 
 /**

@@ -204,8 +204,8 @@ pros::Motor_Group right_drive({
  * TODO: set these ports!
 */
 
-pros::Motor intake_motor_one(9);
-pros::Motor intake_motor_two(-11);
+// pros::Motor intake_motor_one(9);
+// pros::Motor intake_motor_two(-11);
 
 /**
  * TODO: set ports!
@@ -287,7 +287,7 @@ Drive ez_chassis (
 	 * TODOPRONE: set port
 	*/
 	// IMU port
-	,15
+	,16
 
 	// wheel diameter
 	/**
@@ -299,7 +299,7 @@ Drive ez_chassis (
 	 * 
 	 * TODOPRONE: tune wheel diameter
 	*/
-	,1.9
+	,3.25
 
 	/**
 	 * TODOPRTHREE: verify this is correct (blue motors for dt, right?)
@@ -311,7 +311,7 @@ Drive ez_chassis (
 	/**
 	 * TODOPRTWO: verify gear ratio is correct!
 	*/
-	,(60 / 36)
+	,1.333
 
 	/**
 	 * UNCOMMENT IF: using tracking wheels
@@ -405,12 +405,9 @@ void initialize() {
 	// 	Auton("Interference\n\nAfter driving forward, robot performs differently if interfered or not.", interfered_example),
 	// });
 	ez::as::auton_selector.add_autons({
-		Auton("near side holly", auton3),
+		//Auton("pid test", pid_test),
 		Auton("Far Side Auton", far_side),
-		Auton("Drive back", drive_back),
-		Auton("Near Side Auton", near_side),
-		Auton("Test Far Side Auton", test_far_side),
-		Auton("Skills", skills)
+		Auton("Near Side Auton", near_side)
 	});
 
 	/**
@@ -425,12 +422,12 @@ void initialize() {
 	/**
 	 * TODOPRTHREE: modify active brake kP
 	*/
-	ez_chassis.set_active_brake(0); // Sets the active brake kP. We recommend 0.1.
+	ez_chassis.set_active_brake(0.1); // Sets the active brake kP. We recommend 0.1.
 	ez_chassis.initialize();
 	/**
 	 * TODOPRTHREE: not using bc tuning PID constants seemingly has no effect; add in later?
 	*/
-	// default_constants();
+	default_constants();
 
 	// pros::lcd::initialize();
 	ez::as::initialize();
@@ -477,6 +474,7 @@ void autonomous() {
 	ez_chassis.reset_drive_sensor(); // Reset drive sensors to 0
 	ez_chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
 	
+	// far_side();
 	ez::as::auton_selector.call_selected_auton();
 
 	// near_side();
@@ -486,7 +484,7 @@ void autonomous() {
 	// drive_example();
 }
 
-/**
+/** 
  * OPCONTROL: DESCRIPTION
  * 
  * Runs the operator control code. This function will be started in its own task
@@ -576,7 +574,7 @@ void opcontrol() {
 		// currently hard-coded to run tank drive!
 		// chassis.tank_drive(controller.get_analog(ANALOG_LEFT_Y), controller.get_analog(ANALOG_RIGHT_Y));
 		// ez_chassis.tank();
-		ez_chassis.arcade_standard(ez::SPLIT);
+		ez_chassis.tank();
 
 		/**
 		 * END: RUN OTHER ROBOT FUNCTIONS

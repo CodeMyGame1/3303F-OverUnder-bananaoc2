@@ -2,24 +2,17 @@
 
 #include "main.h"
 
+
 void default_constants();
 
-void test_auton();
+void move(double target, int speed, bool wait, bool slew, bool heading);
+void turn(double target, int speed, bool wait);
+void lswing(double target, int speed, bool wait);
+void rswing(double target, int speed, bool wait);
+void waitd();
 
-void drive_example();
-
-void goal_side_two();
-
-void faulty_near_side();
-
-void near_side();
+void pid_test();
 
 void far_side();
 
-void test_far_side();
-
-void drive_back();
-
-void skills();
-
-void auton3();
+void near_side();

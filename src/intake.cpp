@@ -9,13 +9,13 @@ void Intake::update() {
 }
 
 void Intake::extend_intake() {
-    intake_enabled = false;
+    intake_enabled = true;
 
     this->update();
 }
 
 void Intake::retract_intake() {
-    intake_enabled = true;
+    intake_enabled = false;
 
     this->update();
 }

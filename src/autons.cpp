@@ -1,6 +1,7 @@
 // my SAVIOR: https://www.youtube.com/watch?v=qKy98Cbcltw
 
 #include "main.h"
+#include "autons.hpp"
 
 const int DRIVE_SPEED = 110; // This is 110/127 (around 87% of max speed).  We don't suggest making this 127.
                              // If this is 127 and the robot tries to heading correct, it's only correcting by
@@ -8,6 +9,8 @@ const int DRIVE_SPEED = 110; // This is 110/127 (around 87% of max speed).  We d
                              // faster and one side slower, giving better heading correction.
 const int TURN_SPEED  = 90;
 const int SWING_SPEED = 90;
+
+#define s DRIVE_SPEED
 
 /**
  * SOME COOL INFO:
@@ -36,688 +39,111 @@ const int SWING_SPEED = 90;
 // I: GO FASTER
 // D: slow down near the end
 
+// move and turn functions because i dont want to type them out every single time i want to do something
+
+void move(double target, int speed = s, bool wait = true, bool slew = false, bool heading = false) {
+    ez_chassis.set_drive_pid(target, speed, slew, heading);
+
+    if (wait) { ez_chassis.wait_drive(); }
+}
+
+void turn(double target, int speed = s, bool wait = true) {
+    ez_chassis.set_turn_pid(target, speed);
+
+    if (wait) { ez_chassis.wait_drive(); }
+}
+
+void lswing(double target, int speed = s, bool wait = true) {
+    ez_chassis.set_swing_pid(LEFT_SWING, target, speed);
+
+    if (wait) { ez_chassis.wait_drive(); }
+}
+
+void rswing(double target, int speed = s, bool wait = true) {
+    ez_chassis.set_swing_pid(RIGHT_SWING, target, speed);
+
+    if (wait) { ez_chassis.wait_drive(); }
+}
+
+void waitd() {
+    ez_chassis.wait_drive();
+}
+
 void default_constants() {
-    ez_chassis.set_slew_min_power(80, 80);
-    ez_chassis.set_slew_distance(7, 7);
-    ez_chassis.set_pid_constants(&ez_chassis.headingPID, 11, 0, 20, 0);
-    ez_chassis.set_pid_constants(&ez_chassis.forward_drivePID, 100, 5, 1, 0);
-    ez_chassis.set_pid_constants(&ez_chassis.backward_drivePID, 0.45, 0, 5, 0);
+//     ez_chassis.set_slew_min_power(80, 80);
+//     ez_chassis.set_slew_distance(7, 7);
+    // ez_chassis.set_pid_constants(&ez_chassis.headingPID, 11, 0, 20, 0);
+    ez_chassis.set_pid_constants(&ez_chassis.forward_drivePID, 0.48, 0.0025, 7, 0);
+    ez_chassis.set_pid_constants(&ez_chassis.backward_drivePID, 0.48, 0.0025, 7, 0);
     ez_chassis.set_pid_constants(&ez_chassis.turnPID, 5, 0.003, 35, 15);
     ez_chassis.set_pid_constants(&ez_chassis.swingPID, 7, 0, 45, 0);
+    ez_chassis.set_exit_condition(ez_chassis.drive_exit, 40, 50, 150, 150, 250, 500);
 }
 
-void auton_reset() {
-    ez_chassis.reset_pid_targets(); // Resets PID targets to 0
-	ez_chassis.reset_gyro(); // Reset gyro position to 0
-	ez_chassis.reset_drive_sensor(); // Reset drive sensors to 0
+void pid_test() {
+    move(10.0);
+    move(-10.0);
+    turn(45);
+    rswing(0);
 }
 
-void test_auton() {
-    // chassis.left_motors.move(127);
-    // chassis.left_motors.move_absolute((24 / (3.14 * 3.25)), 127);
-    // chassis.right_motors.move_absolute((24 / (3.14 * 3.25)), 127);
+void far_side() { 
+    // wings.open();
+    intake.extend_intake();
+    pros::delay(1000);
+    //wings.close();
+    move(24.0);
+    turn(-32.5);
+    move(39.0); 
+    rswing(-90.0, s, true);
+    move(10.0);
+    pros::delay(150);
+    intake.retract_intake();
+    waitd();
 
-    // pros::delay(50000);
-    
-    // ez_chassis.set_drive_pid(48, 127);
-    // ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(12, 127);
-    ez_chassis.wait_drive();
-}
-
-///
-// Drive Example
-///
-void drive_example() {
-    // The first parameter is target inches
-    // The second parameter is max speed the robot will drive at
-    // The third parameter is a boolean (true or false) for enabling/disabling a slew at the start of drive motions
-    // for slew, only enable it when the drive distance is greater then the slew distance + a few inches
-
-
-    ez_chassis.set_drive_pid(24, DRIVE_SPEED, true);
-    ez_chassis.wait_drive();
-
-    ez_chassis.set_drive_pid(-12, DRIVE_SPEED);
-    ez_chassis.wait_drive();
-
-    ez_chassis.set_drive_pid(-12, DRIVE_SPEED);
-    ez_chassis.wait_drive();
-}
-
-// remember, INTAKE is in front!
-/**
- * AUTON DESC:
- * - as per video in DMs (CURRENT ITERATION:) starts touching the matchload bar
- * - as per YouTube video: starts wherever the top-left robot in this starts: https://www.youtube.com/watch?v=bTMBQ_n-3PQ; the WHOLE square, not straddling two squares
- * 
- * INSPIRATION:
- * - https://www.youtube.com/watch?v=bTMBQ_n-3PQ
- * - the video that Shlok sent in DMs
- * 
- * RISKS:
- * - could cross over the middle barrier
- * - tends towards being a risky auton by itself lel
- * 
- * REQUIREMENTS:
- * - matchload triball!!!
- * 
- * for all `set_drive_pid()` calls, keep in mind slew_min and slew_distance!
- * 
- * TODO: 
- * - TUNE!
- *   - tune speeds
- *   - tune distances / angles
- *   - figure out what needs slew and what doesn't
- * - IMPLEMENT INTAKE AND SHTUFF
- *   - figure out how we're going to get the triball out of the matchload zone
- * - is the wait for intake (pros::delay) too long?
- * - take into account field variances / uncertainties!
-*/
-
-
-void far_side() {
-    intake.intake_motors.set_brake_modes(MOTOR_BRAKE_HOLD);
-
-    intake.intake_the_award();
-    ez_chassis.set_drive_pid(6, 50);
-    ez_chassis.wait_drive();
+    move(-5);
+    turn(90.0);
+    intake.extend_intake();
+    // wings.open();
+    move(25.0);
     pros::delay(100);
-    intake.break_the_award();
+    move(-13.0);
 
-    ez_chassis.set_drive_pid(-34, 110);
-    ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(-45, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(-25, 127);
-    wings.open();
-    ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(-115, 100);
-    ez_chassis.wait_drive();
-    pros::delay(450);
-    wings.close();
-    ez_chassis.set_turn_pid(-45, 127);
+    turn(225.);
+    intake.extend_intake();
+    move(25.);
+    lswing(270.);
     pros::delay(100);
-    ez_chassis.set_drive_pid(-5, 127);
+    intake.retract_intake();
     pros::delay(100);
-    ez_chassis.set_swing_pid(LEFT_SWING, -90, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(-25, 127);
-    wings.close();
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(15, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(115, 127);
-    ez_chassis.wait_drive();
-    intake.outtake_the_award();
-    pros::delay(250);
-    ez_chassis.set_drive_pid(25, 115);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(-15, 127);
-    ez_chassis.wait_drive();
-    intake.break_the_award();
 
-    ez_chassis.set_turn_pid(15, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(17, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(0, 127);
-    wings.open();
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(37, 127);
-    ez_chassis.wait_drive();
-}
+    // move(-10);
+    // turn(-135);
+    // move(17);
+    // wings.open();
+    // turn(0);
+    // turn(45);
+    // wings.close();
+    // intake.extend_intake();
+    // move(-7);
+    // turn(-90);
+    // move(15);
+    // pros::delay(100);
+    // intake.retract_intake();
+    // pros::delay(100);
 
-void auton3() {
-    ez_chassis.set_drive_pid(49, 127);
-    ez_chassis.wait_drive();
-    wings.open();
-    ez_chassis.set_turn_pid(180, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(48, 127);
-    wings.close();
-    ez_chassis.wait_drive();
-
-    ez_chassis.set_turn_pid(100, 127);
-    ez_chassis.wait_drive();
-    wings.close();
-
-    auton_reset();
-
-    ez_chassis.set_drive_pid(-18, 127);
-    wings.open();
-    ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(45, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(-30, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(20, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(0, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(3, 127);
-    ez_chassis.wait_drive();
-    wings.open();
-    ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(80, 100);
-    ez_chassis.wait_drive();
-    pros::delay(500);
-    wings.close();
+    // move(-15);
+    // turn(45);
+    // move(17);
+    // turn(0);
+    // intake.extend_intake();
+    // move(12);
+    // move(-5);
+    // move(5);
+    // //goofyahh
+    // move(6);
 }
 
 void near_side() {
-    ez_chassis.set_drive_pid(-14, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(27, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(-24, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(20, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(0, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(3, 127);
-    ez_chassis.wait_drive();
-    wings.open();
-    ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(80, 100);
-    ez_chassis.wait_drive();
-    pros::delay(500);
-    wings.close();
-    ez_chassis.set_turn_pid(0, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(-4, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(-90, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(17, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(-45, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(35, 127);
-    ez_chassis.wait_drive();
-    wings.open();
 
-    // ez_chassis.set_drive_pid(-50, 127);
-    // ez_chassis.wait_drive();
-    // wings.open();
-    // ez_chassis.set_turn_pid(-90, 127);
-    // ez_chassis.wait_drive();
-
-    // ez_chassis.set_drive_pid(-20, 127);
-    // ez_chassis.wait_drive();
-    // wings.close();
-}
-
-void drive_back() {
-    ez_chassis.set_drive_pid(-45, 127);
-    ez_chassis.wait_drive();
-
-
-    ez_chassis.set_drive_pid(15, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(-45, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(-45, 127);
-    ez_chassis.wait_drive();
-}
-
-void test_far_side() { // attempt to get other 3 balls
-    intake.intake_motors.set_brake_modes(MOTOR_BRAKE_HOLD);
-
-    intake.intake_the_award();
-    ez_chassis.set_drive_pid(6, 50);
-    ez_chassis.wait_drive();
-    pros::delay(75);
-    intake.break_the_award();
-
-    ez_chassis.set_drive_pid(-34, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(-45, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(-20, 127);
-    wings.open();
-    ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(-115, -80);
-    ez_chassis.wait_drive();
-    wings.close();
-    ez_chassis.set_turn_pid(-70, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(-25, 127);
-    wings.close();
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(15, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(115, 127);
-    ez_chassis.wait_drive();
-    intake.outtake_the_award();
-    pros::delay(100);
-    ez_chassis.set_drive_pid(25, 115);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(-20, 127);
-    ez_chassis.wait_drive();
-    intake.break_the_award();
-
-    // other 3 balls
-
-    ez_chassis.set_turn_pid(30, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(40, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(0, 127);
-    ez_chassis.wait_drive();
-    intake.intake_the_award();
-    ez_chassis.set_drive_pid(7, 100);
-    ez_chassis.wait_drive();
-    intake.break_the_award();
-
-    ez_chassis.set_drive_pid(-7, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(-90, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(-15, 127);
-    ez_chassis.wait_drive();
-    wings.open();
-
-    ez_chassis.set_turn_pid(90, 100);
-    ez_chassis.wait_drive();
-    pros::delay(250);
-    ez_chassis.set_turn_pid(0, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(-35, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(25, 127);
-    ez_chassis.wait_drive();
-
-    ez_chassis.set_turn_pid(180, 127);
-    ez_chassis.wait_drive();
-    intake.outtake_the_award();
-    ez_chassis.set_drive_pid(25, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(-35, 127);
-    ez_chassis.wait_drive();
-
-    wings.close();
-    intake.break_the_award();
-}
-
-void skills() {
-    ez_chassis.set_drive_pid(-14, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(27, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(-24, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(20, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(0, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(3, 127);
-    ez_chassis.wait_drive();
-    wings.open();
-    ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(80, 100);
-    ez_chassis.wait_drive();
-    pros::delay(500);
-    wings.close();
-
-    ez_chassis.set_drive_pid(-10, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_turn_pid(110, 127);
-    ez_chassis.wait_drive();
-    ez_chassis.set_drive_pid(16, 127);
-    ez_chassis.wait_drive();
-    wings.open();
-
-    intake.outtake_the_award();
-}
-
-void risky_far_side() {
-    // starts with the "back" touching the matchload bar, the intake facing directly toward the elevation bar
-    pros::lcd::print(0, "starting risky far side auton");
-
-    /**
-     * MOVE: getting triball under elevation bar
-    */
-
-    // starts intake running CONTINUOUSLY!
-    pros::lcd::print(0, "running intake");
-    intake.intake_the_award();
-    intake.intake_motors.set_brake_modes(MOTOR_BRAKE_HOLD);
-    // moves robot directly under elevaton bar
-    pros::lcd::print(0, "driving forward");
-    ez_chassis.set_drive_pid(6, 50);
-    ez_chassis.wait_drive();
-    // pros::delay(210);
-    // stops le intake
-    pros::delay(100);
-    intake.break_the_award();
-
-    // works up until this point!
-
-    /**
-     * MOVE: get triball out of matchload bar
-    */
-
-    // moves robot so its tip is touching the matchload bar
-    // should ideally be holding first intaked triball + pushing alliance (matchload) triball in front
-    pros::lcd::print(0, "moving backward");
-    ez_chassis.set_drive_pid(-34, 127, true);
-    ez_chassis.wait_drive();
-
-    // turns clockwise in place, until the front of the robot is directed along the matchload bar, in the direction of the goal
-    auton_reset();
-    pros::lcd::print(0, "turning \"right\"");
-    ez_chassis.set_turn_pid(145, 127);
-    ez_chassis.wait_drive();
-
-    // opens wings
-    pros::lcd::print(0, "opening wings");
-    wings.open();
-
-    // outtakes intaked triball
-    intake.outtake_the_award();
-    pros::delay(1000);
-    intake.break_the_award();
-
-    // moves halfway up the matchload bar
-    pros::lcd::print(0, "moving backward");
-    ez_chassis.set_drive_pid(14, 127, true);
-    ez_chassis.wait_drive();
-
-    auton_reset();
-
-    // turns a LITTLE towards the goal
-    pros::lcd::print(0, "turning \"left\"");
-    ez_chassis.set_turn_pid(-65, 127);
-    ez_chassis.wait_drive();
-
-    auton_reset();
-
-    // turns FULLY around
-    ez_chassis.set_turn_pid(-150, 100);
-    pros::delay(250);
-    wings.close();
-    ez_chassis.wait_drive();
-
-    // wings.close();
-
-    // furiously (?) scores into the goal
-    pros::lcd::print(0, "moving backward");
-    ez_chassis.set_drive_pid(-20, 127);
-    ez_chassis.wait_drive();
-
-    // backs out of the goal a little 
-    pros::lcd::print(0, "moving forward");
-    ez_chassis.set_drive_pid(15, 127);
-    ez_chassis.wait_drive();
-
-    auton_reset();
-
-    // turn a liiiitle right
-    ez_chassis.set_turn_pid(20, 127);
-    ez_chassis.wait_drive();
-
-    // furiously (?) scores into the goal
-    pros::lcd::print(0, "moving backward");
-    ez_chassis.set_drive_pid(-20, 127);
-    ez_chassis.wait_drive();
-
-    // backs out of the goal a little 
-    pros::lcd::print(0, "moving forward");
-    ez_chassis.set_drive_pid(15, 127);
-    ez_chassis.wait_drive();
-
-    // auton_reset();
-
-    //// NOT DOING THIS PART!
-    // // turns around (intake now facing goal!)
-    // pros::lcd::print(0, "do a barrel roll");
-    // ez_chassis.set_turn_pid(180, 127);
-    // ez_chassis.wait_drive();
-
-    // // starts outtake running
-    // pros::lcd::print(0, "waits to outtake");
-    // intake.outtake_the_award();
-
-    // // rams into the goal again to score triball
-    // pros::lcd::print(0, "moving backward");
-    // ez_chassis.set_drive_pid(10, 127);
-    // ez_chassis.wait_drive();
-
-    // // stops le intake
-    // intake.break_the_award();
-
-    // // backs out of the goal again
-    // pros::lcd::print(0, "moving backward");
-    // ez_chassis.set_drive_pid(-10, 127);
-    // ez_chassis.wait_drive();
-
-    // /**
-    //  * MOVE: scoring TWO MORE TRIBALLS????
-    // */
-
-    // auton_reset();
-
-    // // turns towards the FOURTH triball yeah babyy we're on a roll!! >:))
-    // pros::lcd::print(0, "turning \"left\"");
-    // ez_chassis.set_turn_pid(-75, 127);
-    // ez_chassis.wait_drive();
-
-    // // starts intake running
-    // pros::lcd::print(0, "moving forward");
-    // intake.intake_the_award();
-    // // goes TOWARDS le fourth triball :>
-    // ez_chassis.set_drive_pid(50, 127, true);
-    // ez_chassis.wait_drive();
-    // // stops le intake
-    // intake.break_the_award();
-
-    // auton_reset();
-
-    // // turns around to face the goal DIAGONALLY
-    // ez_chassis.set_turn_pid(140, 127);
-    // ez_chassis.wait_drive();
-
-    // // goes towards the goal a bit (but not enough to like accidentally intake the outtaked triball :grimacing:)
-    // ez_chassis.set_drive_pid(16, 127, true);
-    // ez_chassis.wait_drive();
-
-    // // starts outtake running
-    // intake.outtake_the_award();
-    // // leeway for outtake to outtake
-    // pros::delay(250);
-    // // stops le outtake
-    // intake.break_the_award();
-
-    // auton_reset();
-
-    // // turns around towards the FIFTH TRIBALL???
-    // ez_chassis.set_turn_pid(-150, 127);
-    // ez_chassis.wait_drive();
-
-    // // works as intended up until this point
-
-    // // starts intake
-    // intake.intake_the_award();
-    // // drives towards FIFTH TRIBALL!!!
-    // ez_chassis.set_drive_pid(16, 108, true);
-    // ez_chassis.wait_drive();
-    // // leeway for intake to intake
-    // pros::delay(250);
-    // // stop le intake
-    // intake.break_the_award();
-
-    // auton_reset();
-
-    // // turns around towards goal
-    // ez_chassis.set_turn_pid(160, 108);
-    // ez_chassis.wait_drive();
-
-    // // open wings
-    // wings.open();
-    // // nyoom into goal
-    // ez_chassis.set_drive_pid(36, 108, true);
-    // ez_chassis.wait_drive();
-    // // start outtaking
-    // intake.outtake_the_award();
-    // // leeway for outtake to outtake
-    // pros::delay(250);
-    // // stop le outtake
-    // intake.break_the_award();
-
-    intake.intake_motors.set_brake_modes(MOTOR_BRAKE_COAST);
-}
-
-// model auton:
-
-// void main_auton(pros::Motor_Group left_motors, pros::Motor_Group right_motors) {
-//     intake.move(-127);
-//     chassis.moveTo(-4, 60, 500);
-// 	pros::delay(500);
-//     intake.brake();
-
-//     chassis.moveTo(-34, 60, 1000);
-//     //left_wing.set_value(1);
-//     chassis.turnTo(-60, 50, 500, true);
-//     chassis.moveTo(-62, 16, 1500);
-
-//     chassis.moveTo(-60, 35, 500);
-//     chassis.turnTo(-60, 16, 1000, false);
-//     intake.move(127);
-//     chassis.moveTo(-60, 16, 1500);
-
-// 	chassis.moveTo(-60, 25, 1000);
-// 	chassis.turnTo(-10, 36, 1000);
-// 	chassis.moveTo(-75, 36, 500);
-
-// 	chassis.setPose(-60, 36, 90);
-
-//     // chassis.moveTo(-47, 43, 500);
-// 	chassis.moveTo(-24, 35, 2000);
-// 	chassis.moveTo(-16, 30, 1000);
-
-//     intake.move(-127);
-//     chassis.moveTo(-9, 15, 2000);
-// 	chassis.moveTo(-20, 12, 1000);
-//     pros::delay(500);
-
-//     chassis.moveTo(-12, 0, 1000);
-//     intake.move(-127);
-//     chassis.moveTo(-9, 0, 2500, 100.0);
-//     pros::delay(250);
-//     intake.brake();
-
-//     chassis.turnTo(-60, 5, 1000);
-//     //left_wing.set_value(1);
-//     //right_wing.set_value(1);
-//     chassis.moveTo(-60, 5, 2000);
-// 	pros::delay(1000);
-
-// 	chassis.moveTo(0, 5, 2000);
-// 	chassis.setPose(-10, 5, -90);
-// 	chassis.moveTo(-47, 47, 100);
-// 	chassis.turnTo(-9, 65, 1000);
-// 	chassis.moveTo(-9, 65, 1000);
-// }
-
-/**
- * TODO:
- * - tune distances / angles
- * - tune delays
-*/
-void goal_side_two() {
-    // move towards triball under elevation bar
-    intake.intake_the_award();
-    ez_chassis.set_drive_pid(3, 127);
-    ez_chassis.wait_drive();
-    pros::delay(250);
-    // stops intake
-    intake.break_the_award();
-
-    // move towards matchload bar
-    ez_chassis.set_drive_pid(-28, 127);
-    ez_chassis.wait_drive();
-    
-    // turns left
-    ez_chassis.set_turn_pid(-35, 108);
-    ez_chassis.wait_drive();
-
-    // opens wings
-    wings.open();
-    // moves along the length of matchload bar
-    ez_chassis.set_drive_pid(-23, 127);
-    ez_chassis.wait_drive();
-    /**
-     * TODO: see if the wings need to be closed
-    */
-    // closes wings
-    wings.close();
-
-    /**
-     * TODO: verify this code is correct
-    */
-    // presumably turns towards goal
-    ez_chassis.set_turn_pid(-85, 127);
-    ez_chassis.wait_drive();
-
-    // scores triball into goal
-    ez_chassis.set_drive_pid(-15, 127);
-    ez_chassis.wait_drive();
-
-    // backs out of goal
-    ez_chassis.set_drive_pid(12, 127);
-    ez_chassis.wait_drive();
-
-    /**
-     * TODO: verify this code is correct
-    */
-    // presumably turns around
-    ez_chassis.set_turn_pid(107, 127);
-    ez_chassis.wait_drive();
-
-    /**
-     * TODO: is it possible for intake to outtake while moving in the direction of outtake?
-    */
-    // starts intake running
-    intake.outtake_the_award();
-    // runs into goal
-    ez_chassis.set_drive_pid(15, 127);
-    // waits for intake to outtake
-    pros::delay(500);
-    // stops intake
-    intake.break_the_award();
-
-    // backs out of goal
-    ez_chassis.set_drive_pid(-15, 127);
-    ez_chassis.wait_drive();
-
-    // turns towards triball in center of field
-    ez_chassis.set_turn_pid(-43, 127);
-    ez_chassis.wait_drive();
-
-    // starts intake running
-    intake.intake_the_award();
-    // goes towards triball in center of field
-    ez_chassis.set_drive_pid(59, 127);
-    ez_chassis.wait_drive();
-    // wait for intake
-    pros::delay(250);
-    /**
-     * TODO: verify this is correct
-    */
-    // presumably turns around
-    ez_chassis.set_turn_pid(-180, 127);
-    ez_chassis.wait_drive();
-
-    // starts outtake running
-    intake.outtake_the_award();
-    // drives into goal
-    ez_chassis.set_drive_pid(20, 127);
-    ez_chassis.wait_drive();
-    // waits for outtake to outtake
-    pros::delay(1000);
-    // drives out of goal
-    ez_chassis.set_drive_pid(-10, 127);
-    ez_chassis.wait_drive();
 }
