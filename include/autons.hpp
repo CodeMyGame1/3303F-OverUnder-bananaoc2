@@ -5,12 +5,10 @@
 
 void default_constants();
 
-template <typename number>
-
-void move(number target, int speed, bool wait, bool slew, bool heading);
-void turn(number target, int speed, bool wait);
-void lswing(number target, int speed, bool wait);
-void rswing(number target, int speed, bool wait);
+void move(double target, int speed, bool wait, bool slew, bool heading);
+void turn(double target, int speed, bool wait);
+void lswing(double target, int speed, bool wait);
+void rswing(double target, int speed, bool wait);
 void waitd();
 
 void pid_test();

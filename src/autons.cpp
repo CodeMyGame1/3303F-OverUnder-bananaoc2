@@ -38,25 +38,25 @@ const int SWING_SPEED = 90;
 
 // move and turn functions because i dont want to type them out every single time i want to do something
 
-void move(number target, int speed = s, bool wait = true, bool slew = false, bool heading = false) {
+void move(double target, int speed = s, bool wait = true, bool slew = false, bool heading = false) {
     ez_chassis.set_drive_pid(target, speed, slew, heading);
 
     if (wait) { ez_chassis.wait_drive(); }
 }
 
-void turn(number target, int speed = s, bool wait = true) {
+void turn(double target, int speed = s, bool wait = true) {
     ez_chassis.set_turn_pid(target, speed);
 
     if (wait) { ez_chassis.wait_drive(); }
 }
 
-void lswing(number target, int speed = s, bool wait = true) {
+void lswing(double target, int speed = s, bool wait = true) {
     ez_chassis.set_swing_pid(LEFT_SWING, target, speed);
 
     if (wait) { ez_chassis.wait_drive(); }
 }
 
-void rswing(number target, int speed = s, bool wait = true) {
+void rswing(double target, int speed = s, bool wait = true) {
     ez_chassis.set_swing_pid(RIGHT_SWING, target, speed);
 
     if (wait) { ez_chassis.wait_drive(); }
