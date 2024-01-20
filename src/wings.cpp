@@ -1,7 +1,5 @@
 #include "main.h"
 
-// haha so "left" and "right" are relative to the front of the robot being the intake :clown:
-
 // constructor
 Wings::Wings(
   std::uint8_t wing_left_piston_port
@@ -30,9 +28,6 @@ void Wings::open() {
   this->update();
 }
 
-/**
-  * TODO: sometimes, the first time i press it, it doesn't detect
-*/
 void Wings::wing_it() {
   wings_enabled = !wings_enabled;
 

@@ -41,25 +41,25 @@ const int SWING_SPEED = 90;
 
 // move and turn functions because i dont want to type them out every single time i want to do something
 
-void move(double target, int speed = s, bool wait = true, bool slew = false, bool heading = false) {
+void move(number target, int speed = s, bool wait = true, bool slew = false, bool heading = false) {
     ez_chassis.set_drive_pid(target, speed, slew, heading);
 
     if (wait) { ez_chassis.wait_drive(); }
 }
 
-void turn(double target, int speed = s, bool wait = true) {
+void turn(number target, int speed = s, bool wait = true) {
     ez_chassis.set_turn_pid(target, speed);
 
     if (wait) { ez_chassis.wait_drive(); }
 }
 
-void lswing(double target, int speed = s, bool wait = true) {
+void lswing(number target, int speed = s, bool wait = true) {
     ez_chassis.set_swing_pid(LEFT_SWING, target, speed);
 
     if (wait) { ez_chassis.wait_drive(); }
 }
 
-void rswing(double target, int speed = s, bool wait = true) {
+void rswing(number target, int speed = s, bool wait = true) {
     ez_chassis.set_swing_pid(RIGHT_SWING, target, speed);
 
     if (wait) { ez_chassis.wait_drive(); }
@@ -70,24 +70,59 @@ void waitd() {
 }
 
 void default_constants() {
-//     ez_chassis.set_slew_min_power(80, 80);
-//     ez_chassis.set_slew_distance(7, 7);
-    // ez_chassis.set_pid_constants(&ez_chassis.headingPID, 11, 0, 20, 0);
-    ez_chassis.set_pid_constants(&ez_chassis.forward_drivePID, 0.48, 0.0025, 7, 0);
-    ez_chassis.set_pid_constants(&ez_chassis.backward_drivePID, 0.48, 0.0025, 7, 0);
-    ez_chassis.set_pid_constants(&ez_chassis.turnPID, 5, 0.003, 35, 15);
-    ez_chassis.set_pid_constants(&ez_chassis.swingPID, 7, 0, 45, 0);
-    ez_chassis.set_exit_condition(ez_chassis.drive_exit, 40, 50, 150, 150, 250, 500);
+    ez_chassis.set_slew_min_power(80, 80); // default
+    ez_chassis.set_slew_distance(7, 7); // default
+    ez_chassis.set_pid_constants(&ez_chassis.headingPID, 11, 0, 20, 0); // default, will need tuning if we keep drift drive
+    ez_chassis.set_pid_constants(&ez_chassis.forward_drivePID, 0.48, 0.0025, 7, 0); // could be tuned to be a bit more snappy e.g. tuning kI
+    ez_chassis.set_pid_constants(&ez_chassis.backward_drivePID, 0.48, 0.0025, 7, 0); // could be tuned to be a bit more snappy e.g. tuning kI
+    ez_chassis.set_pid_constants(&ez_chassis.turnPID, 5, 0.003, 35, 15);// default
+    ez_chassis.set_pid_constants(&ez_chassis.swingPID, 7, 0, 45, 0);// default
+    ez_chassis.set_exit_condition(ez_chassis.drive_exit, 20, 50, 75, 150, 125, 500); // needs tuning, still pauses a considerable amount
 }
 
-void pid_test() {
+void pid_test() { // test pid constants
     move(10.0);
     move(-10.0);
     turn(45);
     rswing(0);
 }
 
-void far_side() { 
+void far_side() {
+    wings.open();
+    turn(45);
+    move(18.5);
+    turn(0);
+    pros::delay(250);
+    wings.close();
+    turn(37.5);
+    intake.extend_intake();
+    move(30);
+    turn(0);
+    move(-15);
+    intake.retract_intake();
+}
+
+void near_side() {
+    wings.open();
+    turn(-45);
+    move(18.5);
+    turn(0);
+    pros::delay(250);
+    wings.close();
+    turn(43.5);
+    intake.extend_intake();
+    move(57.5); 
+    intake.retract_intake();
+    pros::delay(500);
+    move(-57.5);
+    turn(135);
+    move(18.5);
+    turn(90);
+    intake.extend_intake();
+    move(24);
+}
+
+void in_progress_far_side() { 
     // wings.open();
     intake.extend_intake();
     pros::delay(1000);
@@ -142,8 +177,4 @@ void far_side() {
     // move(5);
     // //goofyahh
     // move(6);
-}
-
-void near_side() {
-
 }
