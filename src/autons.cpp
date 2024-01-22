@@ -42,7 +42,7 @@ void waitd() {
     ez_chassis.wait_drive();
 }
 
-void move(double target, int speed = s, bool wait = true, bool slew = false, bool heading = false) {
+void move(double target, int speed = s, bool wait = true, bool slew = true, bool heading = true) {
     ez_chassis.set_drive_pid(target, speed, slew, heading);
 
     if (wait) { waitd(); }
