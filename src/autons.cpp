@@ -74,8 +74,8 @@ void default_constants() {
     ez_chassis.set_pid_constants(&ez_chassis.backward_drivePID, 0.48, 0.0025, 7, 0); // could be tuned to be a bit more snappy e.g. tuning kI
     ez_chassis.set_pid_constants(&ez_chassis.turnPID, 5, 0.003, 35, 15);// default
     ez_chassis.set_pid_constants(&ez_chassis.swingPID, 7, 0, 45, 0);// default
-    ez_chassis.set_exit_condition(ez_chassis.drive_exit, 80,  50, 300, 150, 500, 500); // needs tuning, still pauses a considerable amount
-    ez_chassis.set_exit_condition(ez_chassis.turn_exit,  100, 3,  500, 7,   500, 500);
+    ez_chassis.set_exit_condition(ez_chassis.drive_exit, 25,  75, 150, 175, 250, 150); // needs tuning, still pauses a considerable amount
+    ez_chassis.set_exit_condition(ez_chassis.turn_exit,  90, 3,  500, 7, 500, 500);
 }
 
 void pid_test() { // test pid constants
