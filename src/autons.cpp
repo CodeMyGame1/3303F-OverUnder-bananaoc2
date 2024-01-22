@@ -38,43 +38,44 @@ const int SWING_SPEED = 90;
 
 // move and turn functions because i dont want to type them out every single time i want to do something
 
+void waitd() {
+    ez_chassis.wait_drive();
+}
+
 void move(double target, int speed = s, bool wait = true, bool slew = false, bool heading = false) {
     ez_chassis.set_drive_pid(target, speed, slew, heading);
 
-    if (wait) { ez_chassis.wait_drive(); }
+    if (wait) { waitd(); }
 }
 
 void turn(double target, int speed = s, bool wait = true) {
     ez_chassis.set_turn_pid(target, speed);
 
-    if (wait) { ez_chassis.wait_drive(); }
+    if (wait) { waitd(); }
 }
 
 void lswing(double target, int speed = s, bool wait = true) {
     ez_chassis.set_swing_pid(LEFT_SWING, target, speed);
 
-    if (wait) { ez_chassis.wait_drive(); }
+    if (wait) { waitd(); }
 }
 
 void rswing(double target, int speed = s, bool wait = true) {
     ez_chassis.set_swing_pid(RIGHT_SWING, target, speed);
 
-    if (wait) { ez_chassis.wait_drive(); }
-}
-
-void waitd() {
-    ez_chassis.wait_drive();
+    if (wait) { waitd(); }
 }
 
 void default_constants() {
     ez_chassis.set_slew_min_power(80, 80); // default
     ez_chassis.set_slew_distance(7, 7); // default
     ez_chassis.set_pid_constants(&ez_chassis.headingPID, 11, 0, 20, 0); // default, will need tuning if we keep drift drive
-    ez_chassis.set_pid_constants(&ez_chassis.forward_drivePID, 0.48, 0.0025, 7, 0); // could be tuned to be a bit more snappy e.g. tuning kI
+    ez_chassis.set_pid_constants(&ez_chassis.forward_drivePID, 0.48, 0.0025, 7.15, 0); // could be tuned to be a bit more snappy e.g. tuning kI
     ez_chassis.set_pid_constants(&ez_chassis.backward_drivePID, 0.48, 0.0025, 7, 0); // could be tuned to be a bit more snappy e.g. tuning kI
     ez_chassis.set_pid_constants(&ez_chassis.turnPID, 5, 0.003, 35, 15);// default
     ez_chassis.set_pid_constants(&ez_chassis.swingPID, 7, 0, 45, 0);// default
-    ez_chassis.set_exit_condition(ez_chassis.drive_exit, 20, 50, 75, 150, 125, 500); // needs tuning, still pauses a considerable amount
+    ez_chassis.set_exit_condition(ez_chassis.drive_exit, 80,  50, 300, 150, 500, 500); // needs tuning, still pauses a considerable amount
+    ez_chassis.set_exit_condition(ez_chassis.turn_exit,  100, 3,  500, 7,   500, 500);
 }
 
 void pid_test() { // test pid constants
@@ -83,6 +84,13 @@ void pid_test() { // test pid constants
     turn(45);
     rswing(0);
 }
+
+// moves bot backwards, straight into goal
+void push() {
+    move(-30.);
+}
+
+void blank() {}
 
 void far_side() {
     wings.open();
@@ -122,56 +130,65 @@ void near_side() {
 void in_progress_far_side() { 
     // wings.open();
     intake.extend_intake();
-    pros::delay(1000);
-    //wings.close();
+    // wings.close();
     move(24.0);
-    turn(-32.5);
-    move(39.0); 
-    rswing(-90.0, s, true);
-    move(10.0);
-    pros::delay(150);
+    turn(-15);
+    move(35.);
     intake.retract_intake();
-    waitd();
-
-    move(-5);
-    turn(90.0);
+    pros::delay(50);
+    turn(90);
+    pros::delay(50);
     intake.extend_intake();
-    // wings.open();
-    move(25.0);
-    pros::delay(100);
-    move(-13.0);
+    pros::delay(50);
+    move(10.);
+    move(-15.);
+    turn(-72.5);
+    move(15.);
+    intake.retract_intake();
+    pros::delay(50);
 
+    move(-5.);
+    turn(90);
+    // wings.open();
+    intake.extend_intake();
+    move(35.);
+
+    move(-15.);
     turn(225.);
     intake.extend_intake();
-    move(25.);
+    move(23.);
     lswing(270.);
+    intake.retract_intake();
+    pros::delay(50);
+
+    move(-26.);
+    turn(135., s, false);
+    pros::delay(75);
+    intake.extend_intake();
+    waitd();
+    pros::delay(50);
+
+    turn(180);
+    move(40.);
+    turn(270.);
+
+    move(30.);
     pros::delay(100);
     intake.retract_intake();
-    pros::delay(100);
+    pros::delay(50);
 
-    // move(-10);
-    // turn(-135);
-    // move(17);
+    turn(270);
+    move(-40.);
+    lswing(235);
     // wings.open();
-    // turn(0);
-    // turn(45);
-    // wings.close();
-    // intake.extend_intake();
-    // move(-7);
-    // turn(-90);
-    // move(15);
-    // pros::delay(100);
-    // intake.retract_intake();
-    // pros::delay(100);
-
-    // move(-15);
-    // turn(45);
-    // move(17);
-    // turn(0);
-    // intake.extend_intake();
-    // move(12);
-    // move(-5);
-    // move(5);
-    // //goofyahh
-    // move(6);
+    move(-25.);
+    turn(180);
+    //wings.close();
+    move(-17.);
+    move(17.);
+    turn(0);
+    intake.extend_intake();
+    pros::delay(50);
+    move(19.);
+    move(-15.);
 }

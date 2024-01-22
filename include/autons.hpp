@@ -13,6 +13,12 @@ void waitd();
 
 void pid_test();
 
+void push();
+
+void blank();
+
 void far_side();
 
 void near_side();
+
+void in_progress_far_side();

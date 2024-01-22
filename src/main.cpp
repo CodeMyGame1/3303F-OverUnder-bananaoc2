@@ -115,7 +115,7 @@ Drive ez_chassis (
 	// Wheel diameter
 	,3.25
 
-	// cartridge rpm
+	// cartridge rpm (blue motors)
 	,600
 
 	// external drivetrain gear ratio (this is 36t -> 48t)
@@ -156,11 +156,11 @@ Drive ez_chassis (
 // 	pros::E_MOTOR_BRAKE_COAST
 // );
 Intake intake = Intake( 
-	'C'
+	'B', 'C'
 );
 
 Wings wings = Wings(
-	'A', 'B'
+	'A'
 );
 
 /**
@@ -184,7 +184,9 @@ void initialize() {
 	*/
 
 	ez::as::auton_selector.add_autons({
-		//Auton("pid test", pid_test),
+		Auton("pid test", in_progress_far_side),
+		Auton("push", push),
+		Auton("blank", blank),
 		Auton("Far Side Auton", far_side),
 		Auton("Near Side Auton", near_side)
 	});
@@ -310,6 +312,7 @@ void opcontrol() {
 		*/
 		// currently hard-coded to run tank drive!
 		// chassis.tank_drive(controller.get_analog(ANALOG_LEFT_Y), controller.get_analog(ANALOG_RIGHT_Y));
+		ez_chassis.set_max_speed(90);// temp for botb
 		ez_chassis.tank();
 
 		/**

@@ -356,7 +356,7 @@
     "upload_options": {
       "description": "The ORIGINAL! GENUINE! 100% homemade 3303F Over Under code :>",
       "icon": "pizza",
-      "slot": 3,
+      "slot": 1,
       "after": "screen"
     }
   }
