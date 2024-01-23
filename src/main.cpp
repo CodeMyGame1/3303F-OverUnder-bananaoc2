@@ -184,11 +184,10 @@ void initialize() {
 	*/
 
 	ez::as::auton_selector.add_autons({
-		Auton("pid test", in_progress_far_side),
-		Auton("push", push),
-		Auton("blank", blank),
 		Auton("Far Side Auton", far_side),
-		Auton("Near Side Auton", near_side)
+		Auton("Near Side Auton", near_side),
+		Auton("push", push),
+		Auton("blank", blank)
 	});
 
 	ez_chassis.set_active_brake(0.1);

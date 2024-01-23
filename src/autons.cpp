@@ -3,12 +3,10 @@
 #include "main.h"
 #include "autons.hpp"
 
-const int DRIVE_SPEED = 115; // This is 110/127 (around 87% of max speed).  We don't suggest making this 127.
+const int DRIVE_SPEED = 117; // This is 110/127 (around 87% of max speed).  We don't suggest making this 127.
                              // If this is 127 and the robot tries to heading correct, it's only correcting by
                              // making one side slower.  When this is 87%, it's correcting by making one side
                              // faster and one side slower, giving better heading correction.
-const int TURN_SPEED  = 110;
-const int SWING_SPEED = 100;
 
 #define s DRIVE_SPEED
 
@@ -70,12 +68,13 @@ void default_constants() {
     ez_chassis.set_slew_min_power(80, 80); // default
     ez_chassis.set_slew_distance(7, 7); // default
     ez_chassis.set_pid_constants(&ez_chassis.headingPID, 11, 0, 20, 0); // default, will need tuning if we keep drift drive
-    ez_chassis.set_pid_constants(&ez_chassis.forward_drivePID, 0.48, 0.0025, 7.15, 0); // could be tuned to be a bit more snappy e.g. tuning kI
-    ez_chassis.set_pid_constants(&ez_chassis.backward_drivePID, 0.48, 0.0025, 7, 0); // could be tuned to be a bit more snappy e.g. tuning kI
+    ez_chassis.set_pid_constants(&ez_chassis.forward_drivePID, 0.47, 0.0025, 7.15, 0); // could be tuned to be a bit more snappy e.g. tuning kI
+    ez_chassis.set_pid_constants(&ez_chassis.backward_drivePID, 0.47, 0.0025, 7, 0); // could be tuned to be a bit more snappy e.g. tuning kI
     ez_chassis.set_pid_constants(&ez_chassis.turnPID, 5, 0.003, 35, 15);// default
     ez_chassis.set_pid_constants(&ez_chassis.swingPID, 7, 0, 45, 0);// default
     ez_chassis.set_exit_condition(ez_chassis.drive_exit, 25,  75, 150, 175, 250, 150); // needs tuning, still pauses a considerable amount
     ez_chassis.set_exit_condition(ez_chassis.turn_exit,  90, 3,  500, 7, 500, 500);
+    ez_chassis.set_exit_condition(ez_chassis.swing_exit,  90, 3,  500, 7, 500, 500);
 }
 
 void pid_test() { // test pid constants
@@ -87,50 +86,30 @@ void pid_test() { // test pid constants
 
 // moves bot backwards, straight into goal
 void push() {
-    move(-30.);
+    move(-34.);
 }
 
 void blank() {}
 
-void far_side() {
-    wings.open();
-    turn(45);
-    move(18.5);
-    turn(0);
-    pros::delay(250);
-    wings.close();
-    turn(37.5);
-    intake.extend_intake();
-    move(30);
-    turn(0);
-    move(-15);
-    intake.retract_intake();
-}
+void far_side() { 
+    // Far side auton
+    // 1. bump alliance triball matchload towards goal
+    // 2. rush middle triball
+    // 3. drop in front of goal
+    // 4. turn around and grab other middle triball
+    // 5. turn around and score both middle triballs into goal
+    // 6. grab side middle triball
+    // 7. drop to side entrance of goal
+    // 8. drive into alley and grab alley triball
+    // 9. kick out triball in matchload zone
+    // 10. score matchload triball, matchload zone triball, side middle triball
+    // 11. turn around and score alley triball in intake
+    // 12. drive into alley and touch horizontal bar with zipties on intake
 
-void near_side() {
     wings.open();
-    turn(-45);
-    move(18.5);
-    turn(0);
-    pros::delay(250);
+    intake.extend_intake();
+    pros::delay(100);
     wings.close();
-    turn(43.5);
-    intake.extend_intake();
-    move(57.5); 
-    intake.retract_intake();
-    pros::delay(500);
-    move(-57.5);
-    turn(135);
-    move(18.5);
-    turn(90);
-    intake.extend_intake();
-    move(24);
-}
-
-void in_progress_far_side() { 
-    // wings.open();
-    intake.extend_intake();
-    // wings.close();
     move(24.0);
     turn(-15);
     move(35.);
@@ -173,17 +152,18 @@ void in_progress_far_side() {
     turn(270.);
 
     move(30.);
-    pros::delay(100);
+    pros::delay(50);
     intake.retract_intake();
     pros::delay(50);
 
     turn(270);
     move(-40.);
     lswing(235);
-    // wings.open();
+    wings.open();
     move(-25.);
+    turn(150);
+    wings.close();
     turn(180);
-    //wings.close();
     move(-17.);
     move(17.);
     turn(0);
@@ -191,4 +171,51 @@ void in_progress_far_side() {
     pros::delay(50);
     move(19.);
     move(-15.);
+
+    turn(235);
+    move(25.);
+    turn(270);
+    move(30);
+    intake.extend_intake();
+}
+
+void near_side() {
+    // Near side auton
+    // 1. bump alliance triball matchload towards goal
+    // 2. rush middle triball
+    // 3. drop to alley
+    // 4. kick out triball in matchload zone into alley
+    // 5. score alliance triball matchload
+    // 6. drive back to alley and push triballs to other side
+    // 7. touch horizontal bar with zipties on intake
+
+    wings.open();
+    intake.extend_intake();
+    pros::delay(100);
+    wings.close();
+    move(24.0);
+    turn(15);
+    move(35.);
+    intake.retract_intake();
+    pros::delay(50);
+    move(-35.);
+    turn(0);
+    move(-21.);
+    wings.open();
+    turn(-135);
+    pros::delay(50);
+    wings.close();
+    rswing(-90);
+    turn(90);
+    pros::delay(50);
+    intake.extend_intake();
+    turn(135);
+    move(-25.);
+    turn(180);
+    move(-15.);
+    move(15.);
+    turn(135);
+    move(25.);
+    turn(90);
+    move(30.);
 }
