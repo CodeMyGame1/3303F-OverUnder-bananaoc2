@@ -258,9 +258,15 @@ void autonomous() {
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+
+std::uint64_t startTime;
+std::uint64_t lastBuzz;
 void opcontrol() {
 	// closes 'em if not already done
 	wings.close();
+
+	startTime = pros::micros();
+	lastBuzz = startTime;
 
 	while (true) {
 		/**
@@ -270,6 +276,24 @@ void opcontrol() {
 		/**
 		 * END: PRINTING TO LCD
 		*/
+
+		if (pros::micros() - lastBuzz >= 100000) {
+			if (pros::micros() - startTime >= 9.5e7) {
+				lastBuzz = pros::micros();
+			 	controller.rumble("........");
+			}
+
+
+			if (pros::micros() - startTime >= 9e7) {
+				lastBuzz = pros::micros();
+			 	controller.rumble(". . . . ");
+			}
+
+			if (pros::micros() - startTime >= 7.5e7) {
+				lastBuzz = pros::micros();
+			 	controller.rumble(".   .   ");
+			}
+		}
 
 		/**
 		 * SECTION: CHECKING CONTROLLER INPUTS
