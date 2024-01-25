@@ -41,7 +41,7 @@
  */
 //#include "okapi/api.hpp"
 //#include "pros/api_legacy.h"
-// #include "lemlib/api.hpp"
+#include "lemlib/api.hpp"
 #include "EZ-Template/api.hpp"
 // #include <string>
 // #include "blocker.hpp"
@@ -57,6 +57,7 @@
 // extern Blocker blocker;
 // extern Catapult catapult;
 extern Chassis chassis;
+extern lemlib::Chassis lemlib_chassis;
 extern Drive ez_chassis;
 extern Intake intake;
 extern Wings wings;

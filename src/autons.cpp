@@ -3,7 +3,7 @@
 #include "main.h"
 #include "autons.hpp"
 
-const int DRIVE_SPEED = 117; // This is 110/127 (around 87% of max speed).  We don't suggest making this 127.
+const int DRIVE_SPEED = 120; // This is 110/127 (around 87% of max speed).  We don't suggest making this 127.
                              // If this is 127 and the robot tries to heading correct, it's only correcting by
                              // making one side slower.  When this is 87%, it's correcting by making one side
                              // faster and one side slower, giving better heading correction.
@@ -72,9 +72,9 @@ void default_constants() {
     ez_chassis.set_pid_constants(&ez_chassis.backward_drivePID, 0.47, 0.0025, 7, 0); // could be tuned to be a bit more snappy e.g. tuning kI
     ez_chassis.set_pid_constants(&ez_chassis.turnPID, 5, 0.003, 35, 15);// default
     ez_chassis.set_pid_constants(&ez_chassis.swingPID, 7, 0, 45, 0);// default
-    ez_chassis.set_exit_condition(ez_chassis.drive_exit, 25,  75, 150, 175, 250, 150); // needs tuning, still pauses a considerable amount
-    ez_chassis.set_exit_condition(ez_chassis.turn_exit,  90, 3,  500, 7, 500, 500);
-    ez_chassis.set_exit_condition(ez_chassis.swing_exit,  90, 3,  500, 7, 500, 500);
+    ez_chassis.set_exit_condition(ez_chassis.drive_exit, 35,  150, 175, 200, 200, 85); // needs tuning, still pauses a considerable amount
+    ez_chassis.set_exit_condition(ez_chassis.turn_exit,  75, 10,  350, 17,   250, 250);
+    ez_chassis.set_exit_condition(ez_chassis.swing_exit,  75, 10,  350, 17,   250, 250);
 }
 
 void pid_test() { // test pid constants
@@ -90,6 +90,69 @@ void push() {
 }
 
 void blank() {}
+
+void lemlib_far_side() {
+    // Far side auton
+    // 1. bump alliance triball matchload towards goal
+    // 2. rush middle triball
+    // 3. drop in front of goal
+    // 4. turn around and grab other middle triball
+    // 5. turn around and score both middle triballs into goal
+    // 6. grab side middle triball
+    // 7. drop to side entrance of goal
+    // 8. drive into alley and grab alley triball
+    // 9. kick out triball in matchload zone
+    // 10. score matchload triball, matchload zone triball, side middle triball
+    // 11. turn around and score alley triball in intake
+    // 12. drive into alley and touch horizontal bar with zipties on intake
+
+    lemlib_chassis.setPose(-35, 60, 180);
+
+    wings.open();
+    intake.extend_intake();
+    pros::delay(100);
+    wings.close();
+    lemlib_chassis.follow("far1.txt", 5*1000, 30.0);
+    // intake.retract_intake();
+    // pros::delay(50);
+    // turn(90);
+    // wings.open();
+    // pros::delay(50);
+    // intake.extend_intake();
+    // move(35.);
+    // pros::delay(50);
+    // wings.close();
+    // move(-10.);
+    // lemlib_chassis.follow("far2.txt", 300, 15.0);
+    // pros::delay(50);
+    // intake.retract_intake();
+
+    // lemlib_chassis.follow("far3.txt", 300, 15.0);
+    // pros::delay(75);
+    // intake.extend_intake();
+    // pros::delay(50);
+    // move(10.);
+    // move(-10.);
+
+    // lemlib_chassis.follow("far4.txt", 300, 15.0);
+    // pros::delay(50);
+    // intake.retract_intake();
+    // pros::delay(50);
+
+    // lemlib_chassis.follow("far5.txt", 300, 15.0);
+    // wings.open();
+    // pros::delay(50);
+    // turn(-45);
+    // pros::delay(50);
+    
+    // intake.extend_intake();
+    // lemlib_chassis.follow("far6.txt", 300, 15.0);
+    // move(-15.);
+    // move(17.);
+    // pros::delay(50);
+    // move(-10.);
+    // lemlib_chassis.follow("far7.txt", 300, 15.0);
+}
 
 void far_side() { 
     // Far side auton
@@ -133,9 +196,9 @@ void far_side() {
     move(35.);
 
     move(-15.);
-    turn(225.);
+    turn(223.);
     intake.extend_intake();
-    move(23.);
+    move(25.);
     lswing(270.);
     intake.retract_intake();
     pros::delay(50);
@@ -160,7 +223,7 @@ void far_side() {
     move(-40.);
     lswing(235);
     wings.open();
-    move(-25.);
+    move(-17.);
     turn(150);
     wings.close();
     turn(180);

@@ -150,46 +150,46 @@ Drive ez_chassis (
  * START: LEMLIB
 */
 
-lemlib::Drivetrain_t drivetrain {
-    &left_drive, // left drivetrain motors
-    &right_drive, // right drivetrain motors
-    13, // track width
-    3.25, // wheel diameter
-    450 // wheel rpm
-};
+// lemlib::Drivetrain_t drivetrain {
+//     &left_drive, // left drivetrain motors
+//     &right_drive, // right drivetrain motors
+//     13, // track width
+//     3.25, // wheel diameter
+//     450 // wheel rpm
+// };
 
-// odometry struct
-lemlib::OdomSensors_t sensors {
-    nullptr, // vertical tracking wheel 1
-    nullptr, // vertical tracking wheel 2
-    nullptr, // horizontal tracking wheel 1
-    nullptr, // we don't have a second tracking wheel, so we set it to nullptr
-    &inertial_sensor // inertial sensor
-};
+// // odometry struct
+// lemlib::OdomSensors_t sensors {
+//     nullptr, // vertical tracking wheel 1
+//     nullptr, // vertical tracking wheel 2
+//     nullptr, // horizontal tracking wheel 1
+//     nullptr, // we don't have a second tracking wheel, so we set it to nullptr
+//     &inertial_sensor // inertial sensor
+// };
 
-// forward/backward PID
-lemlib::ChassisController_t lateralController {
-    0.47, // kP
-    7, // kD
-    1, // smallErrorRange
-    100, // smallErrorTimeout
-    3, // largeErrorRange
-    500, // largeErrorTimeout
-    5 // slew rate
-};
+// // forward/backward PID
+// lemlib::ChassisController_t lateralController {
+//     0.47, // kP
+//     7, // kD
+//     1, // smallErrorRange
+//     100, // smallErrorTimeout
+//     3, // largeErrorRange
+//     500, // largeErrorTimeout
+//     5 // slew rate
+// };
  
-// turning PID
-lemlib::ChassisController_t angularController {
-    5, // kP
-    35, // kD
-    1, // smallErrorRange
-    100, // smallErrorTimeout
-    3, // largeErrorRange
-    500, // largeErrorTimeout
-    0 // slew rate
-};
+// // turning PID
+// lemlib::ChassisController_t angularController {
+//     5, // kP
+//     35, // kD
+//     1, // smallErrorRange
+//     100, // smallErrorTimeout
+//     3, // largeErrorRange
+//     500, // largeErrorTimeout
+//     0 // slew rate
+// };
 
-lemlib::Chassis lemlib_chassis(drivetrain, lateralController, angularController, sensors);
+// lemlib::Chassis lemlib_chassis(drivetrain, lateralController, angularController, sensors);
 
 /**
  * END: LEMLIB
@@ -242,7 +242,7 @@ void initialize() {
 	ez_chassis.set_active_brake(0.1);
 	ez_chassis.initialize();
 
-	lemlib_chassis.initialize();
+	//lemlib_chassis.calibrate();
 
 	default_constants();
 
@@ -386,7 +386,7 @@ void opcontrol() {
 		*/
 		// currently hard-coded to run tank drive!
 		// chassis.tank_drive(controller.get_analog(ANALOG_LEFT_Y), controller.get_analog(ANALOG_RIGHT_Y));
-		ez_chassis.set_max_speed(90);// temp for botb
+		// ez_chassis.set_max_speed(90);// temp for botb
 		ez_chassis.tank();
 
 		/**

@@ -17,6 +17,8 @@ void push();
 
 void blank();
 
+void lemlib_far_side();
+
 void far_side();
 
 void near_side();
