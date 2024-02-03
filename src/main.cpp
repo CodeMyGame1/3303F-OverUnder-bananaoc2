@@ -7,11 +7,13 @@
  * "TODOPRHK\:" (again, omit backslash) denotes a TODO that is purely for housekeeping / organizing the code
  * 
  * NOTE: just as general advice, most of the code / documentation here is organized in ALPHABETICAL order :P
+ * 
+ * TODO: move all these comments to main.h and define functions there too!
 */
 
 #include "main.h"
 #include "EZ-Template/api.hpp"
-#include "lemlib/api.hpp"
+
 /**
  * AT A GLANCE:
  * 
@@ -72,15 +74,20 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
  * TODO: set ports!
 */
 
-pros::Motor left_top_front_motor(18);
-pros::Motor left_top_back_motor(20);
-pros::Motor left_bottom_front_motor(-19);
-pros::Motor left_bottom_back_motor(-17);
+// { -10, 9, -11, -13 }
+	
+	// right chassis ports
+	// ,{ 12, -1, 20, 15 }
 
-pros::Motor right_top_front_motor(-11);
-pros::Motor right_top_back_motor(-13);
-pros::Motor right_bottom_front_motor(10);
-pros::Motor right_bottom_back_motor(12);
+pros::Motor left_top_front_motor(-10);
+pros::Motor left_top_back_motor(9);
+pros::Motor left_bottom_front_motor(-11);
+pros::Motor left_bottom_back_motor(-13);
+
+pros::Motor right_top_front_motor(12);
+pros::Motor right_top_back_motor(-1);
+pros::Motor right_bottom_front_motor(20);
+pros::Motor right_bottom_back_motor(15);
 
 /**
  * DRIVETRAIN: MOTOR GROUPS
@@ -105,10 +112,10 @@ pros::Imu inertial_sensor(16);
 
 Drive ez_chassis (
 	// left chassis ports
-	{ 18, 20, -19, -17 }
+	{ -10, 9, -11, -13 }
 	
 	// right chassis ports
-	,{ -11, -13, 10, 12 }
+	,{ 12, -1, 20, 15 }
 
 	// IMU port
 	,16
@@ -204,12 +211,18 @@ Drive ez_chassis (
 // 	{right_top_front_motor, right_top_back_motor, right_bottom_front_motor, right_bottom_back_motor},
 // 	pros::E_MOTOR_BRAKE_COAST
 // );
-Intake intake = Intake( 
-	'B', 'C'
+// Intake intake = Intake( 
+// 	'B', 'C'
+// );
+Intake intake = Intake(
+	8, pros::E_MOTOR_BRAKE_COAST
 );
 
+/**
+ * TODO: verify wing ports are correct
+*/
 Wings wings = Wings(
-	'A'
+	'A', 'B'
 );
 
 /**
@@ -313,6 +326,8 @@ void autonomous() {
 std::uint64_t startTime;
 std::uint64_t lastBuzz;
 void opcontrol() {
+	ez_chassis.set_max_speed(101.6);
+
 	// closes 'em if not already done
 	wings.close();
 
@@ -350,7 +365,7 @@ void opcontrol() {
 		 * SECTION: CHECKING CONTROLLER INPUTS
 		 */
 		bool R1_pressed = controller.get_digital(DIGITAL_R1);
-		// bool R2_pressed = controller.get_digital(DIGITAL_R2);
+		bool R2_pressed = controller.get_digital(DIGITAL_R2);
 			
 		/**
 		 * START: HANDLING CONTROLLER INPUTS
@@ -366,10 +381,17 @@ void opcontrol() {
 		/**
 		 * INTAKE:
 		*/
-		if (controller.get_digital(DIGITAL_R1)) {
-			intake.extend_intake();
-		} else {
-			intake.retract_intake();
+		// if (controller.get_digital(DIGITAL_R1)) {
+		// 	intake.extend_intake();
+		// } else {
+		// 	intake.retract_intake();
+		// }
+		if (R1_pressed == R2_pressed) {
+			intake.break_the_award();
+		} else if (R1_pressed) {
+			intake.intake_the_award();
+		} else if (R2_pressed) {
+			intake.outtake_the_award();
 		}
 
 		/**
